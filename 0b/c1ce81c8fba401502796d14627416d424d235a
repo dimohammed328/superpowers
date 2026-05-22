@@ -1,0 +1,23 @@
+skills/executing-plans/SKILL.md
+  s_a4a19892fcc02d::t_ecd1a97d0cecaa 14
+skills/writing-skills/SKILL.md
+  s_a4a19892fcc02d::t_452b2ebb3bcbe8 12
+skills/brainstorming/visual-companion.md
+  s_a4a19892fcc02d::t_111c47ebbeebb5 50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "0bc1ce81c8fba401502796d14627416d424d235a",
+  "prompts": {},
+  "sessions": {
+    "s_a4a19892fcc02d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "32856a12-69c6-42d6-bc3e-5ce70b4211ca",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
