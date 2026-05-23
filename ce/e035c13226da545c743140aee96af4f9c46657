@@ -1,0 +1,22 @@
+docs/plans/2026-05-22-loom-backed-planning-design.md
+  s_e126036bf0cc53::t_9d45fece7e3875 1-149,160-237,239-241,243-357,360-496
+  s_e126036bf0cc53::t_77d7d9b7ddd2bb 150-159
+  s_e126036bf0cc53::t_47c01dab7c8a27 358-359
+  s_e126036bf0cc53::t_4f7faf85c06a72 238,242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "cee035c13226da545c743140aee96af4f9c46657",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
