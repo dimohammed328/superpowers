@@ -1,0 +1,21 @@
+tests/hooks/test_task_inprogress_sync.sh
+  s_e126036bf0cc53::t_977b77bf83d5e2 1-28
+hooks/loom-task-inprogress-sync.sh
+  s_e126036bf0cc53::t_f08fab9078c17a 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "7dfa002f3975f1a5ee9ace927d9c7c295b14bcab",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
