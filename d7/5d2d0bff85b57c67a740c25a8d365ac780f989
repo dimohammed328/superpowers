@@ -1,0 +1,21 @@
+docs/plans/2026-05-22-loom-cli-extensions.md
+  s_e126036bf0cc53::t_95ae89c26dc677 1-1781
+docs/plans/2026-05-22-loom-superpowers-integration.md
+  s_e126036bf0cc53::t_2861b834959565 1-1658
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "d75d2d0bff85b57c67a740c25a8d365ac780f989",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
