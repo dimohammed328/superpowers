@@ -19,6 +19,16 @@ Next up, once you say "go", it launches a *subagent-driven-development* process,
 There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
 
 
+## Loom-backed planning workflow
+
+Two slash commands drive a project-management-aware planning loop:
+
+- **`/epic <description>`** — large features, multi-subsystem refactors. Grooms a loom epic with child stories and tasks, dispatches parallel story-executor subagents in their own worktrees off an epic branch, runs per-story merge + validation, and final epic-level verification via the `verify` skill.
+- **`/story <description>`** — small, scoped changes. Grooms a loom story under the project's `backlog` epic, runs one story-executor over its tasks, validates, hands off to `finishing-a-development-branch`.
+
+Both commands auto-create a loom workspace (`.loom/`) in the current repo on first use. See `docs/plans/2026-05-22-loom-backed-planning-design.md` for the full design and the related agent definitions in `agents/`.
+
+
 ## Sponsorship
 
 If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
