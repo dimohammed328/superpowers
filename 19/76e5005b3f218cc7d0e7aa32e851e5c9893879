@@ -1,0 +1,21 @@
+hooks/loom-subagent-context-inject.sh
+  s_e126036bf0cc53::t_e00ec6194eea61 1-57
+tests/hooks/test_subagent_context_inject.sh
+  s_e126036bf0cc53::t_cb104d0fa77a9e 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "1976e5005b3f218cc7d0e7aa32e851e5c9893879",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
