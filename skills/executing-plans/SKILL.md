@@ -1,70 +1,125 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: "Use after writing-plans has materialized loom items. Orchestrates execution: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope. Hands off to finishing-a-development-branch on success."
 ---
 
-# Executing Plans
+# Executing Plans — loom-backed orchestrator
 
-## Overview
+This skill is the orchestrator. It runs in the main session (not a subagent) and dispatches the per-story / per-task work.
 
-Load plan, review critically, execute all tasks, report when complete.
+**Announce at start:** "I'm using the executing-plans skill to orchestrate execution."
 
-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
+## What you receive
 
-**Note:** If subagents are available (via the Agent tool), use superpowers:subagent-driven-development instead of this skill — quality is significantly higher with subagent support.
+From the writing-plans skill's handoff, one of:
+- `epic_qid=<qid>` — runs the epic wave loop
+- `story_qid=<qid>` — runs the single-story shape
 
-## The Process
+Plus the bound loom project qid and `${CLAUDE_SESSION_ID}` (for orchestrator-side ownership tracking if needed).
 
-### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create TodoWrite and proceed
+## Orchestrator state files
 
-### Step 2: Execute Tasks
+Maintained under `<epic-worktree>/.loom/`:
+- `retry-counters.json` — per-story retry counts across waves
+- `orchestrator.log` — append-only wave-by-wave log
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+Both are gitignored by loom's `.loom/.gitignore`.
 
-### Step 3: Complete Development
+## Epic wave loop
 
-After all tasks complete and verified:
-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
-- Follow that skill to verify tests, present options, execute choice
+### Setup (once per `/epic`)
 
-## When to Stop and Ask for Help
+1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<epic-qid>/` on branch `loom/<epic-qid>` off `main`.
+2. `cd <epic-worktree>`.
+3. Initialize retry counters file: `echo "{}" > .loom/retry-counters.json`.
 
-**STOP executing immediately when:**
-- Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
+### Loop body (until no ready stories remain)
 
-**Ask for clarification rather than guessing.**
+```
+loop:
+    ready=$(loom ready <epic-qid> --type story --json)
+    if [empty]: break
 
-## When to Revisit Earlier Steps
+    # Wave 1: dispatch story-executor subagents in PARALLEL
+    for each sqid in ready:
+        - Create child worktree: <repo>/.worktrees/<epic-qid>--<sqid> off loom/<epic-qid>
+          on branch loom/<epic-qid>/<sqid>
+        - Dispatch:
+            Agent(subagent_type="story-executor",
+                  prompt="story_qid=<sqid> worktree=<path> parent_branch=loom/<epic-qid>")
+    wait for ALL parallel dispatches to complete
 
-**Return to Review (Step 1) when:**
-- Partner updates the plan based on your feedback
-- Fundamental approach needs rethinking
+    # Wave 2: integrate each completed story sequentially
+    for each sqid that the executor reported done (topo order):
+        result = Agent(subagent_type="story-integrator",
+                       prompt="epic_qid=<epic-qid> story_qid=<sqid> branch=loom/<epic-qid>/<sqid> parent_branch=loom/<epic-qid> worktree=<epic-worktree>")
+        if result.result == "ok":
+            loom complete <sqid>
+        elif result.result in ("merge_failed", "validation_failed"):
+            # Discard the story; it goes back to ready and gets picked up next iteration.
+            rm -rf <repo>/.worktrees/<epic-qid>--<sqid>
+            git branch -D loom/<epic-qid>/<sqid>
+            loom reopen <sqid>
+            increment retry_counter[sqid] in .loom/retry-counters.json
+            if retry_counter[sqid] >= 3:
+                HALT with diagnostic — surface result.reason / failed_criteria to the user
+        log everything to .loom/orchestrator.log
+```
 
-**Don't force through blockers** - stop and ask.
+To dispatch subagents in parallel, send a single message with multiple `Agent` tool calls.
 
-## Remember
-- Review plan critically first
-- Follow plan steps exactly
-- Don't skip verifications
-- Reference skills when plan says to
-- Stop when blocked, don't guess
-- Never start implementation on main/master branch without explicit user consent
+### After loop exits
 
-## Integration
+1. Dispatch the final validator:
+   ```
+   Agent(subagent_type="epic-validator",
+         prompt="epic_qid=<eqid> branch=loom/<eqid> worktree=<epic-worktree>")
+   ```
+2. If `result.result == "ok"`:
+   - `loom complete <epic-qid>`
+   - Invoke `superpowers:finishing-a-development-branch` to choose merge / PR / keep.
+3. Else: HALT with the validator's diagnostic. Do not auto-retry at the epic level — that's a human decision.
 
-**Required workflow skills:**
-- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
-- **superpowers:writing-plans** - Creates the plan this skill executes
-- **superpowers:finishing-a-development-branch** - Complete development after all tasks
+## Story (single-item) shape
+
+For `story_qid=...` entry:
+
+1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<story-qid>/` on branch `loom/<story-qid>` off `main`.
+2. Dispatch one story-executor:
+   ```
+   Agent(subagent_type="story-executor",
+         prompt="story_qid=<sqid> worktree=<path> parent_branch=main")
+   ```
+3. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
+   ```
+   Agent(subagent_type="story-integrator",
+         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main worktree=<story-worktree>")
+   ```
+4. If `result.ok`:
+   - `loom complete <sqid>`
+   - Invoke `superpowers:finishing-a-development-branch`.
+5. If `result` is merge_failed or validation_failed:
+   - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
+   - On exhausting retries: HALT.
+
+## Tracking work in the orchestrator's own TodoList
+
+In your own (main session) TodoList, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
+
+## Halt UX
+
+When you halt, leave the workspace inspectable:
+- Branches stay in place
+- Worktrees stay in place (the failed-story worktree was deleted; others remain)
+- Loom items reflect current status
+- `.loom/orchestrator.log` has the full trail
+- `.loom/retry-counters.json` shows what's been retried
+
+Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd <epic-worktree> && loom tree <epic-qid>` to inspect; the failing story is `<sqid>` with these unmet criteria: ...").
+
+## Constraints
+
+- **Never call `git push` or open PRs.** That's `finishing-a-development-branch`'s job.
+- **Never call `loom complete` on a story before the integrator returns `ok`.**
+- **Never auto-retry at the epic level.** Halt and surface.
+- **Bounded retries**: 3 per story across waves.
