@@ -1,0 +1,22 @@
+tests/hooks/test_task_created_guard.sh
+  s_e126036bf0cc53::t_1d3f4668fcef3b 1-34
+hooks/loom-task-created-guard.sh
+  s_e126036bf0cc53::t_9c056d02edbe51 1-51,53-68
+  s_e126036bf0cc53::t_22b4386bc4ede3 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "7b490d6b673447e27647bcef74014ac4d9076bba",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
