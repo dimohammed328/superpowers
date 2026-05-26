@@ -45,8 +45,14 @@ your agent_type:
 - TaskCompleted will automatically run \`loom complete <qid>\` for tasks
   whose subjects carry the qid prefix.
 
-Use \`loom show <story-qid>\` and \`loom order <story-qid>\` to learn the
-story body (with \`## Validation Criteria\`) and the topological task order.
+Read the story body (with \`## Validation Criteria\`) via
+\`loom show <story-qid>\` and get the topological task list via
+\`loom order <story-qid>\`.
+
+If you are a **story-executor**: emit exactly one \`TaskCreate\` per task
+returned by \`loom order\` — your TodoList must have one entry per child
+task, never a single entry for the story qid itself. With N tasks
+returned, expect N TaskCreate calls before any task work begins.
 EOF
 )
 
