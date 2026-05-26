@@ -1,0 +1,19 @@
+skills/using-superpowers/SKILL.md
+  s_17be1cf861a078::t_b17dc0888f2148 48,62,64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fd7ab6f7bdf27a5878b0eaadc7136adf0edef1ef",
+  "prompts": {},
+  "sessions": {
+    "s_17be1cf861a078": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6dcfc411-2234-4212-8156-bc23432538d3",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
