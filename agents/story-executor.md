@@ -2,6 +2,8 @@
 name: story-executor
 description: Single-threaded executor for a loom story's tasks. Reads the story body and its task list in topological order, implements each task with TDD discipline, commits per task. Does NOT merge or validate the story — those are the integrator's job.
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill, mcp__gitnexus__impact, mcp__gitnexus__context
+model: sonnet
+effort: medium
 ---
 
 # Story Executor
