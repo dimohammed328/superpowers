@@ -1,0 +1,19 @@
+tests/explicit-skill-requests/run-test.sh
+  s_17be1cf861a078::t_e6fbdb9aa2de73 110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "61a1084deb4dc101cca1ad6bb46e6afc0e28964e",
+  "prompts": {},
+  "sessions": {
+    "s_17be1cf861a078": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6dcfc411-2234-4212-8156-bc23432538d3",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
