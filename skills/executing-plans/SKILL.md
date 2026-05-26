@@ -29,8 +29,8 @@ Both are gitignored by loom's `.loom/.gitignore`.
 
 ### Setup (once per `/epic`)
 
-1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<epic-qid>/` on branch `loom/<epic-qid>` off `main`.
-2. `cd <epic-worktree>`.
+1. Call `EnterWorktree` to enter a worktree on branch `loom/<epic-qid>` off `main`. The harness creates the worktree (typically at `<repo>/.worktrees/<epic-qid>/`) and switches the session into it.
+2. Confirm the working directory is the epic worktree (the harness sets cwd as part of `EnterWorktree`).
 3. Initialize retry counters file: `echo "{}" > .loom/retry-counters.json`.
 
 ### Loop body (until no ready stories remain)
