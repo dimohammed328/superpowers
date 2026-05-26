@@ -67,7 +67,7 @@ For **story** mode, the draft includes:
 
 ## Constraints
 
-- **No design doc file is written.** The groomed draft goes straight into loom items at the writing-plans step. The old `docs/superpowers/specs/` flow is gone.
+- **No design doc file is written.** The groomed draft goes straight into loom items at the writing-plans step.
 - **Never skip the research step** even when the description seems detailed. Grounding the conversation in concrete files/symbols is what makes the criteria observable.
 - **Loom is the only backend.** If the consumer repo can't be bound to a loom project (e.g., not a git repo), surface the failure and stop. There is no fallback path.
 
