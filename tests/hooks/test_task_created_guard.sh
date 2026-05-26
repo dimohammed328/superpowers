@@ -4,11 +4,14 @@
 
 set -euo pipefail
 
-HOOK="$(dirname "$0")/../../hooks/loom-task-created-guard.sh"
+HOOK="$(cd "$(dirname "$0")/../../hooks" && pwd)/loom-task-created-guard.sh"
 
-# Prepare a temp LOOM_DIR with a ready task
+# Prepare a temp LOOM_DIR with a ready task. cd into it so the per-project
+# `.loom/` workspace state lands inside the temp dir (cleaned by the trap),
+# not in the parent repo's git toplevel.
 export LOOM_DIR=$(mktemp -d)
 trap 'rm -rf "$LOOM_DIR"' EXIT
+cd "$LOOM_DIR"
 loom init >/dev/null
 loom -y project create p --repo "x" >/dev/null
 EPIC=$(loom -y epic create p --title "E" | awk '{print $NF}')

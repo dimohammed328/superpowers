@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-HOOK="$(dirname "$0")/../../hooks/loom-task-completed-sync.sh"
+HOOK="$(cd "$(dirname "$0")/../../hooks" && pwd)/loom-task-completed-sync.sh"
 
 export LOOM_DIR=$(mktemp -d)
 trap 'rm -rf "$LOOM_DIR"' EXIT
+cd "$LOOM_DIR"  # avoid creating .loom/ workspace in parent repo
 loom init >/dev/null
 loom -y project create p --repo x >/dev/null
 EPIC=$(loom -y epic create p --title E | awk '{print $NF}')
