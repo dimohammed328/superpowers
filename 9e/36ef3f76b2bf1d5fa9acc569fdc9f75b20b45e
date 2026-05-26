@@ -1,0 +1,20 @@
+RELEASE-NOTES.md
+  s_50d1860af8756f::t_9592c0cc3c7bf9 870
+  s_50d1860af8756f::t_c75b6d1e5d0b4b 13,15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9e36ef3f76b2bf1d5fa9acc569fdc9f75b20b45e",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
