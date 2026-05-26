@@ -106,6 +106,51 @@ For `story_qid=...` entry:
 
 In your own (main session) TodoList, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
 
+## Finalize branch
+
+On final validation success, this skill itself terminates the flow by integrating the validated branch into its parent. There is no further handoff.
+
+**What "the branch" means here:**
+- For epic flow: the epic branch `loom/<epic-qid>` is merged into `main`.
+- For story flow (`/story`): the story branch `loom/<sqid>` is merged into `main`.
+
+**Default behavior (merge + push):**
+
+```bash
+cd <repo-root>          # use the main checkout, not the worktree
+git fetch origin
+git checkout <parent>   # main for epics, main for /story flow
+git pull --ff-only
+git merge --no-ff <branch> -m "Merge <branch>: <one-line summary>"
+git push origin <parent>
+```
+
+Use `--no-ff` to preserve the branch boundary in history, matching the convention the story-integrator already uses for per-story merges into the epic branch.
+
+After a successful push, clean up the local branch and worktree:
+
+```bash
+git branch -d <branch>
+git worktree remove <worktree-path>   # if a worktree existed for this branch
+```
+
+**PR mode (only when the user explicitly asked):**
+
+If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, push the branch and open a PR:
+
+```bash
+git push -u origin <branch>
+gh pr create --base <parent> --head <branch> \
+  --title "<epic or story title>" \
+  --body "<summary derived from the loom item body>"
+```
+
+Leave the branch and worktree in place; the user will land the PR.
+
+**How to tell which mode applies.** Look at the original user request that triggered `/epic` or `/story`. If it contains the literal words "PR" or "pull request", use PR mode. Otherwise use the default merge + push. If genuinely ambiguous, ask once before acting.
+
+**Validation failure path is unchanged:** if the final validator returned a failure, halt and surface the diagnostic — do not attempt to finalize.
+
 ## Halt UX
 
 When you halt, leave the workspace inspectable:
