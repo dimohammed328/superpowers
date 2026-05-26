@@ -1,0 +1,22 @@
+skills/writing-skills/SKILL.md
+  s_17be1cf861a078::t_1acafe3b23cbd2 598
+skills/writing-skills/persuasion-principles.md
+  s_17be1cf861a078::t_3afc9cb09508b1 36
+  s_17be1cf861a078::t_57e033674d8cb4 83-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8e8d6db83c45ae962ee219c999b2bfda7bbec45d",
+  "prompts": {},
+  "sessions": {
+    "s_17be1cf861a078": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6dcfc411-2234-4212-8156-bc23432538d3",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
