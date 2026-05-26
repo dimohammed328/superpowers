@@ -1,0 +1,27 @@
+docs/testing.md
+  s_17be1cf861a078::t_fc2a01e810e956 84
+  s_17be1cf861a078::t_5b2eef93869e64 60
+  s_17be1cf861a078::t_21623a3fa76b3f 48
+docs/plans/2025-11-22-opencode-support-design.md
+  s_17be1cf861a078::t_a5c77e5ac159d1 135
+docs/plans/2025-11-22-opencode-support-implementation.md
+  s_17be1cf861a078::t_91de3401626284 704
+  s_17be1cf861a078::t_f12f1713ac07b4 874
+  s_17be1cf861a078::t_aa3f503b88a227 1084
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6f386c97134a05f29bbc7058ce627f1153f933c6",
+  "prompts": {},
+  "sessions": {
+    "s_17be1cf861a078": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6dcfc411-2234-4212-8156-bc23432538d3",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
