@@ -25,7 +25,7 @@ This test suite verifies that skills are loaded correctly and Claude follows the
 
 ### Run specific test:
 ```bash
-./run-skill-tests.sh --test test-subagent-driven-development.sh
+./run-skill-tests.sh --test test-requesting-code-review.sh
 ```
 
 ### Run with verbose output:
@@ -80,40 +80,7 @@ echo "=== All tests passed ==="
 
 ## Current Tests
 
-### Fast Tests (run by default)
-
-#### test-subagent-driven-development.sh
-Tests skill content and requirements (~2 minutes):
-- Skill loading and accessibility
-- Workflow ordering (spec compliance before code quality)
-- Self-review requirements documented
-- Plan reading efficiency documented
-- Spec compliance reviewer skepticism documented
-- Review loops documented
-- Task context provision documented
-
 ### Integration Tests (use --integration flag)
-
-#### test-subagent-driven-development-integration.sh
-Full workflow execution test (~10-30 minutes):
-- Creates real test project with Node.js setup
-- Creates implementation plan with 2 tasks
-- Executes plan using subagent-driven-development
-- Verifies actual behaviors:
-  - Plan read once at start (not per task)
-  - Full task text provided in subagent prompts
-  - Subagents perform self-review before reporting
-  - Spec compliance review happens before code quality
-  - Spec reviewer reads code independently
-  - Working implementation is produced
-  - Tests pass
-  - Proper git commits created
-
-**What it tests:**
-- The workflow actually works end-to-end
-- Our improvements are actually applied
-- Subagents follow the skill correctly
-- Final code is functional and tested
 
 #### test-requesting-code-review.sh
 Behavioral test for the code reviewer subagent (~5 minutes):
@@ -146,7 +113,7 @@ Behavioral test for the code reviewer subagent (~5 minutes):
 
 With `--verbose`, you'll see full Claude output:
 ```bash
-./run-skill-tests.sh --verbose --test test-subagent-driven-development.sh
+./run-skill-tests.sh --verbose --test test-requesting-code-review.sh
 ```
 
 Without verbose, only failures show output.
