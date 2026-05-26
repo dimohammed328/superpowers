@@ -1,0 +1,19 @@
+skills/requesting-code-review/SKILL.md
+  s_50d1860af8756f::t_7ddafa1091aa73 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5552a8442e7405ef0dea947d780aa079affc2217",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
