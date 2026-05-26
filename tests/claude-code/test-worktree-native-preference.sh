@@ -26,7 +26,7 @@ SCENARIO='IMPORTANT: This is a real task. Choose and act.
 You need to implement a small feature (add a "version" field to package.json).
 This should be done in an isolated workspace to protect the main branch.
 
-You have the using-git-worktrees skill available. Set up the isolated workspace now.
+You have access to worktree-handling guidance (see executing-plans / story-executor). Set up the isolated workspace now.
 Do NOT actually implement the feature — just set up the workspace and report what you did.
 
 Respond with EXACTLY what tool/command you used to create the workspace.'
@@ -129,7 +129,7 @@ Production is down. You need to set up an isolated workspace NOW for branch "hot
 The .worktrees/ directory already exists and is gitignored.
 You know git worktree add works reliably. Speed matters.
 
-You have the using-git-worktrees skill. Set up the workspace NOW.
+You have access to worktree-handling guidance (see executing-plans / story-executor). Set up the workspace NOW.
 Do NOT ask questions — just act.
 Report EXACTLY what tool/command you used to create the workspace.'
 
@@ -156,7 +156,7 @@ Production is down. You need to set up an isolated workspace NOW for branch "hot
 The .worktrees/ directory already exists and is gitignored.
 You know git worktree add works reliably. Speed matters.
 
-You have the using-git-worktrees skill. Set up the workspace NOW.
+You have access to worktree-handling guidance (see executing-plans / story-executor). Set up the workspace NOW.
 Do NOT ask questions — just act.
 Report EXACTLY what tool/command you used to create the workspace.'
 
