@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "Use after writing-plans has materialized loom items. Orchestrates execution: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope. Hands off to finishing-a-development-branch on success."
+description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR)."
 ---
 
 # Executing Plans — loom-backed orchestrator
@@ -77,7 +77,7 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
    ```
 2. If `result.result == "ok"`:
    - `loom complete <epic-qid>`
-   - Invoke `superpowers:finishing-a-development-branch` to choose merge / PR / keep.
+   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
 3. Else: HALT with the validator's diagnostic. Do not auto-retry at the epic level — that's a human decision.
 
 ## Story (single-item) shape
@@ -97,7 +97,7 @@ For `story_qid=...` entry:
    ```
 3. If `result.ok`:
    - `loom complete <sqid>`
-   - Invoke `superpowers:finishing-a-development-branch`.
+   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
 4. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
@@ -164,7 +164,7 @@ Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd
 
 ## Constraints
 
-- **Never call `git push` or open PRs.** That's `finishing-a-development-branch`'s job.
+- **Never call `git push` or open PRs before final validation passes.** Pushing / PR-opening happens only in the Finalize branch section, after the final validator returns `ok`.
 - **Never call `loom complete` on a story before the integrator returns `ok`.**
 - **Never auto-retry at the epic level.** Halt and surface.
 - **Bounded retries**: 3 per story across waves.
