@@ -1,0 +1,30 @@
+README.md
+  s_e126036bf0cc53::t_e66bd0a8960faa 172
+  s_e126036bf0cc53::t_bd7d9146089945 17
+tests/claude-code/README.md
+  s_e126036bf0cc53::t_9fea7ec2d16859 116
+  s_e126036bf0cc53::t_ded362b509447d 28
+tests/claude-code/run-skill-tests.sh
+  s_e126036bf0cc53::t_2dc4fd435f4068 75
+  s_e126036bf0cc53::t_80a9fea5dc547d 60,63
+tests/explicit-skill-requests/run-test.sh
+  s_e126036bf0cc53::t_c8e532796239fe 18
+tests/explicit-skill-requests/run-all.sh
+  s_e126036bf0cc53::t_b710bddbac22e7 18,29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "c9ecb2309d7e89cb507033c62e19dd55bfb43286",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
