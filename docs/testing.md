@@ -1,6 +1,6 @@
 # Testing Superpowers Skills
 
-This document describes how to test Superpowers skills, particularly the integration tests for complex skills like `subagent-driven-development`.
+This document describes how to test Superpowers skills, particularly the integration tests for complex skills like `requesting-code-review`.
 
 ## Overview
 
@@ -12,7 +12,7 @@ Testing skills that involve subagents, workflows, and complex interactions requi
 tests/
 ├── claude-code/
 │   ├── test-helpers.sh                    # Shared test utilities
-│   ├── test-subagent-driven-development-integration.sh
+│   ├── test-requesting-code-review.sh
 │   ├── analyze-token-usage.py             # Token analysis tool
 │   └── run-skill-tests.sh                 # Test runner (if exists)
 ```
@@ -24,9 +24,9 @@ tests/
 Integration tests execute real Claude Code sessions with actual skills:
 
 ```bash
-# Run the subagent-driven-development integration test
+# Run the requesting-code-review integration test
 cd tests/claude-code
-./test-subagent-driven-development-integration.sh
+./test-requesting-code-review.sh
 ```
 
 **Note:** Integration tests can take 10-30 minutes as they execute real implementation plans with multiple subagents.
@@ -37,18 +37,18 @@ cd tests/claude-code
 - Claude Code must be installed and available as `claude` command
 - Local dev marketplace must be enabled: `"superpowers@superpowers-dev": true` in `~/.claude/settings.json`
 
-## Integration Test: subagent-driven-development
+## Integration Test Pattern
 
-### What It Tests
+### What Integration Tests Verify
 
-The integration test verifies the `subagent-driven-development` skill correctly:
+Skill integration tests typically verify that a target skill correctly:
 
-1. **Plan Loading**: Reads the plan once at the beginning
-2. **Full Task Text**: Provides complete task descriptions to subagents (doesn't make them read files)
-3. **Self-Review**: Ensures subagents perform self-review before reporting
-4. **Review Order**: Runs spec compliance review before code quality review
-5. **Review Loops**: Uses review loops when issues are found
-6. **Independent Verification**: Spec reviewer reads code independently, doesn't trust implementer reports
+1. **Skill Invocation**: The `Skill` tool fires with the expected skill name
+2. **Subagent Dispatch**: Where applicable, the Task tool dispatches subagents with full context
+3. **Task Tracking**: TodoWrite is used to track progress
+4. **Review / Verification Steps**: Mandatory steps in the skill's flow (e.g., review loops, self-review) actually execute
+5. **Implementation Artifacts**: Files created, tests pass, git commits show proper workflow
+6. **Independent Verification**: Where the skill prescribes independent checks (reviewer not trusting implementer), the actual messages show this
 
 ### How It Works
 
@@ -67,7 +67,7 @@ The integration test verifies the `subagent-driven-development` skill correctly:
 
 ```
 ========================================
- Integration Test: subagent-driven-development
+ Integration Test: requesting-code-review
 ========================================
 
 Test project: /tmp/tmp.xyz123
@@ -75,7 +75,7 @@ Test project: /tmp/tmp.xyz123
 === Verification Tests ===
 
 Test 1: Skill tool invoked...
-  [PASS] subagent-driven-development skill was invoked
+  [PASS] requesting-code-review skill was invoked
 
 Test 2: Subagents dispatched...
   [PASS] 7 subagents dispatched
