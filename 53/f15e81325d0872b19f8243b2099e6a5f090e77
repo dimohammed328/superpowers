@@ -1,0 +1,26 @@
+tests/hooks/test_task_created_guard.sh
+  s_e126036bf0cc53::t_b7e03895eeae46 7
+  s_e126036bf0cc53::t_817d9b007f5845 9-11,14
+tests/hooks/test_task_inprogress_sync.sh
+  s_e126036bf0cc53::t_772ca444cfd3b7 3
+  s_e126036bf0cc53::t_e2040579b7583a 7
+tests/hooks/test_task_completed_sync.sh
+  s_e126036bf0cc53::t_81a4b42b8480d3 7
+  s_e126036bf0cc53::t_e821fc8a403d07 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "53f15e81325d0872b19f8243b2099e6a5f090e77",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
