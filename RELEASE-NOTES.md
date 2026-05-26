@@ -221,7 +221,7 @@ Dramatically reduces token usage and speeds up spec and plan reviews by eliminat
 
 **OpenCode tool mapping fix**
 
-- `TodoWrite` → `todowrite` (was incorrectly mapped to `update_plan`); verified against OpenCode source
+- `TaskCreate, TaskUpdate` → `todowrite` (was incorrectly mapped to `update_plan`); verified against OpenCode source
 
 ### Bug Fixes
 
@@ -593,7 +593,7 @@ Other subagent workflow improvements:
 - Controller provides full task text to workers (not file references)
 - Workers can ask clarifying questions before AND during work
 - Self-review checklist before reporting completion
-- Plan read once at start, extracted to TodoWrite
+- Plan read once at start, extracted to TaskCreate, TaskUpdate
 
 New prompt templates in `skills/subagent-driven-development/`:
 - `implementer-prompt.md` - Includes self-review checklist, encourages questions
@@ -748,7 +748,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 - Personal skills override superpowers skills when names match
 - Clean skill display: shows name/description without raw frontmatter
 - Helpful context: shows supporting files directory for each skill
-- Tool mapping for Codex: TodoWrite→update_plan, subagents→manual fallback, etc.
+- Tool mapping for Codex: TaskCreate, TaskUpdate→update_plan, subagents→manual fallback, etc.
 - Bootstrap integration with minimal AGENTS.md for automatic startup
 - Complete installation guide and bootstrap instructions specific to Codex
 
