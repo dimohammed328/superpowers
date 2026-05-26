@@ -33,8 +33,19 @@ Substitute the values from your injected workflow context. This records ownershi
 1. `cd <worktree>`
 2. `loom show <story_qid> --json | jq .body` — read the story body. Locate the `## Validation Criteria` section.
 3. `loom order <story_qid> --json` — get the topologically sorted task list.
-4. **For each task in that order:**
-   - Use TaskCreate to add a Claude task with subject `[<task-qid>] <task title>` (the TaskCreated hook validates this against loom).
+4. **Build your TodoList: one entry per child task.** For *every* task qid returned by `loom order` in step 3, emit a separate `TaskCreate(...)` call with subject `[<task-qid>] <task title>`. The TaskCreated hook validates each subject against loom and rejects malformed entries. If `loom order` returned 5 tasks, your TodoList must have 5 entries — not 1, not "one for the story."
+
+   **The story qid is NOT a TodoList subject.** Only its child task qids are. Do not create a single entry like `[superpowers:backlog:1] Implement story` — that will be blocked, and even if it weren't, it defeats the per-task TDD/commit/sync loop that follows.
+
+   Example — given `loom order` returning three tasks `foo:bar:1:1`, `foo:bar:1:2`, `foo:bar:1:3`:
+
+   ```
+   TaskCreate(subject="[foo:bar:1:1] Add failing test for parser edge case")
+   TaskCreate(subject="[foo:bar:1:2] Implement parser fix")
+   TaskCreate(subject="[foo:bar:1:3] Update docs and changelog")
+   ```
+
+   Emit these *before* starting work on any of them, so the full plan is visible up front.
 5. **Then walk your task list sequentially:**
    - Mark the task as `in_progress` in Claude's TodoList. The `loom-task-inprogress-sync` hook automatically calls `loom update <task-qid> status in_progress`.
    - **Apply TDD discipline** (invoke `superpowers:test-driven-development` skill): write failing test → run failing → minimal impl → run passing → refactor.
