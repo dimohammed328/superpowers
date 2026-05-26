@@ -52,11 +52,14 @@ Whether you just merged or are running on the story branch directly:
 ### Step 3: Decide
 
 - **All criteria pass AND tests/lint/format are green:**
-  ```json
-  {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
-  ```
+  1. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case let `finishing-a-development-branch` decide cleanup.
+  2. Return:
+     ```json
+     {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
+     ```
 - **Any criterion fails OR tests fail:**
   - If you just performed a merge: `git revert -m 1 HEAD --no-edit` to undo it.
+  - Do NOT call `ExitWorktree` — leave the story worktree in place so the orchestrator can inspect it and re-dispatch.
   - Return:
     ```json
     {"result": "validation_failed", "failed_criteria": [{"text": "...", "evidence": "..."}, ...]}
