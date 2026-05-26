@@ -10,10 +10,9 @@
 
 ### Worktree Skills Rewrite
 
-`using-git-worktrees` and `finishing-a-development-branch` now detect when the agent is already running inside an isolated worktree and prefer the harness's native worktree controls before falling back to `git worktree`. Behavior was TDD-validated and cross-platform-checked across five harnesses. (PRI-974, PR #1121)
+`finishing-a-development-branch` now detects when the agent is already running inside an isolated worktree and prefers the harness's native worktree controls before falling back to `git worktree`. Behavior was TDD-validated and cross-platform-checked across five harnesses. (PRI-974, PR #1121)
 
-- **Environment detection** — both skills check `GIT_DIR != GIT_COMMON` before doing anything; if already in a linked worktree, creation is skipped entirely. A submodule guard prevents false detection.
-- **Consent before creating worktrees** — `using-git-worktrees` no longer creates worktrees implicitly; the skill asks the user first. Fixes #991 (subagent-driven-development was auto-creating worktrees without consent).
+- **Environment detection** — the skill checks `GIT_DIR != GIT_COMMON` before doing anything; if already in a linked worktree, creation is skipped entirely. A submodule guard prevents false detection.
 - **Native tool preference (Step 1a)** — when the harness exposes its own worktree tool (e.g. Codex), the skill defers to it. The user's stated preference is respected when expressed.
 - **Provenance-based cleanup** — `finishing-a-development-branch` only cleans up worktrees inside `.worktrees/` (created by superpowers); anything outside is left alone. Fixes #940 (Option 2 was incorrectly cleaning up worktrees), #999 (merge-then-remove ordering), and #238 (`cd` to repo root before `git worktree remove`).
 - **Detached HEAD handling** — the finishing menu collapses to two options when there is no branch to merge from.
@@ -467,10 +466,6 @@ Updated `~/.codex/skills/` reference (deprecated) to `~/.agents/skills/` for nat
 
 ### Improvements
 
-**Worktree isolation now required before implementation**
-
-Added `using-git-worktrees` as a required skill for both `subagent-driven-development` and `executing-plans`. Implementation workflows now explicitly require setting up an isolated worktree before starting work, preventing accidental work directly on main.
-
 **Main branch protection softened to require explicit consent**
 
 Instead of prohibiting main branch work entirely, the skills now allow it with explicit user consent. More flexible while still ensuring users are aware of the implications.
@@ -872,7 +867,7 @@ These changes address observed agent behavior where they rationalize around skil
 
 **Skill names standardized to lowercase**
 - All skill frontmatter `name:` fields now use lowercase kebab-case matching directory names
-- Examples: `brainstorming`, `test-driven-development`, `using-git-worktrees`
+- Examples: `brainstorming`, `test-driven-development`, `writing-plans`
 - All skill announcements and cross-references updated to lowercase format
 - This ensures consistent naming across directory names, frontmatter, and documentation
 
