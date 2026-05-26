@@ -1,0 +1,21 @@
+skills/executing-plans/SKILL.md
+  s_50d1860af8756f::t_db8ed253fed25a 47-49
+  s_50d1860af8756f::t_5227aeb9e09b84 87,90,92-93,96
+  s_50d1860af8756f::t_5686b43d5e0e15 98,101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9e9f7171bd8430fefe86a582dcfe6599c56a1018",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
