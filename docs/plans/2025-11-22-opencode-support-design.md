@@ -132,7 +132,7 @@ When a new session starts (`session.started` event):
    ```markdown
    **Tool Mapping for OpenCode:**
    When skills reference tools you don't have, substitute:
-   - `TodoWrite` → `update_plan`
+   - `TaskCreate, TaskUpdate` → `update_plan`
    - `Task` with subagents → Use OpenCode subagent system (@mention)
    - `Skill` tool → `use_skill` custom tool
    - Read, Write, Edit, Bash → Your native equivalents

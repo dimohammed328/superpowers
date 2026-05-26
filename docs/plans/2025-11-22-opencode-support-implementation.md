@@ -701,7 +701,7 @@ After the tools array, add:
       const toolMapping = `
 **Tool Mapping for OpenCode:**
 When skills reference tools you don't have, substitute OpenCode equivalents:
-- \`TodoWrite\` → \`update_plan\` (your planning/task tracking tool)
+- \`TaskCreate, TaskUpdate\` → \`update_plan\` (your planning/task tracking tool)
 - \`Task\` tool with subagents → Use OpenCode's subagent system (@mention syntax or automatic dispatch)
 - \`Skill\` tool → \`use_skill\` custom tool (already available)
 - \`Read\`, \`Write\`, \`Edit\`, \`Bash\` → Use your native tools
@@ -871,7 +871,7 @@ git pull
 ### Tool mapping issues
 
 When a skill references a Claude Code tool you don't have:
-- `TodoWrite` → use `update_plan`
+- `TaskCreate, TaskUpdate` → use `update_plan`
 - `Task` with subagents → use `@mention` syntax to invoke OpenCode subagents
 - `Skill` → use `use_skill` tool
 - File operations → use your native tools
@@ -1081,7 +1081,7 @@ These steps require OpenCode to be installed and are not part of the automated i
 4. **Test use_skill**: Load a skill and verify content appears
 5. **Test supporting files**: Verify skill directory paths are accessible
 6. **Test personal skills**: Create a personal skill and verify it shadows core
-7. **Test tool mapping**: Verify TodoWrite → update_plan mapping works
+7. **Test tool mapping**: Verify TaskCreate, TaskUpdate → update_plan mapping works
 
 ## Success Criteria
 

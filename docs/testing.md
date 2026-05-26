@@ -45,7 +45,7 @@ Skill integration tests typically verify that a target skill correctly:
 
 1. **Skill Invocation**: The `Skill` tool fires with the expected skill name
 2. **Subagent Dispatch**: Where applicable, the Task tool dispatches subagents with full context
-3. **Task Tracking**: TodoWrite is used to track progress
+3. **Task Tracking**: TaskCreate, TaskUpdate is used to track progress
 4. **Review / Verification Steps**: Mandatory steps in the skill's flow (e.g., review loops, self-review) actually execute
 5. **Implementation Artifacts**: Files created, tests pass, git commits show proper workflow
 6. **Independent Verification**: Where the skill prescribes independent checks (reviewer not trusting implementer), the actual messages show this
@@ -57,7 +57,7 @@ Skill integration tests typically verify that a target skill correctly:
 3. **Verification**: Parses the session transcript (`.jsonl` file) to verify:
    - Skill tool was invoked
    - Subagents were dispatched (Task tool)
-   - TodoWrite was used for tracking
+   - TaskCreate, TaskUpdate was used for tracking
    - Implementation files were created
    - Tests pass
    - Git commits show proper workflow
@@ -81,7 +81,7 @@ Test 2: Subagents dispatched...
   [PASS] 7 subagents dispatched
 
 Test 3: Task tracking...
-  [PASS] TodoWrite used 5 time(s)
+  [PASS] TaskCreate, TaskUpdate used 5 time(s)
 
 Test 6: Implementation verification...
   [PASS] src/math.js created
