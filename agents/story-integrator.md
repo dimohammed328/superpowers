@@ -2,6 +2,8 @@
 name: story-integrator
 description: Merges one completed story branch into its parent and validates the story's `## Validation Criteria` against the post-merge state. Tries trivial inline conflict resolution; reverts the merge on validation failure. Returns a structured result for the orchestrator.
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill
+model: sonnet
+effort: medium
 ---
 
 # Story Integrator
@@ -52,11 +54,14 @@ Whether you just merged or are running on the story branch directly:
 ### Step 3: Decide
 
 - **All criteria pass AND tests/lint/format are green:**
-  ```json
-  {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
-  ```
+  1. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case leave the worktree in place and let the orchestrator's Finalize step (in `executing-plans`) clean it up after merge/push.
+  2. Return:
+     ```json
+     {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
+     ```
 - **Any criterion fails OR tests fail:**
   - If you just performed a merge: `git revert -m 1 HEAD --no-edit` to undo it.
+  - Do NOT call `ExitWorktree` — leave the story worktree in place so the orchestrator can inspect it and re-dispatch.
   - Return:
     ```json
     {"result": "validation_failed", "failed_criteria": [{"text": "...", "evidence": "..."}, ...]}
@@ -65,7 +70,7 @@ Whether you just merged or are running on the story branch directly:
 ## What you must NOT do
 
 - **Do NOT call `loom complete` or `loom reopen`.** The orchestrator handles status transitions based on your return value.
-- **Do NOT push, force-push, or create PRs.** That's `finishing-a-development-branch`'s job after the epic loop completes.
+- **Do NOT push, force-push, or create PRs.** Final integration (push or PR) happens in the `executing-plans` Finalize step after the epic-level validator passes.
 - **Do NOT modify the story's source files** to make criteria pass. If they don't pass on first observation, that's a `validation_failed`.
 - **Do NOT skip the tests/lint/format runs** even if criteria all observably pass.
 

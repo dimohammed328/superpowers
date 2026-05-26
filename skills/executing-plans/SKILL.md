@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "Use after writing-plans has materialized loom items. Orchestrates execution: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope. Hands off to finishing-a-development-branch on success."
+description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR)."
 ---
 
 # Executing Plans — loom-backed orchestrator
@@ -29,8 +29,8 @@ Both are gitignored by loom's `.loom/.gitignore`.
 
 ### Setup (once per `/epic`)
 
-1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<epic-qid>/` on branch `loom/<epic-qid>` off `main`.
-2. `cd <epic-worktree>`.
+1. Call `EnterWorktree` to enter a worktree on branch `loom/<epic-qid>` off `main`. The harness creates the worktree (typically at `<repo>/.worktrees/<epic-qid>/`) and switches the session into it.
+2. Confirm the working directory is the epic worktree (the harness sets cwd as part of `EnterWorktree`).
 3. Initialize retry counters file: `echo "{}" > .loom/retry-counters.json`.
 
 ### Loop body (until no ready stories remain)
@@ -42,11 +42,11 @@ loop:
 
     # Wave 1: dispatch story-executor subagents in PARALLEL
     for each sqid in ready:
-        - Create child worktree: <repo>/.worktrees/<epic-qid>--<sqid> off loom/<epic-qid>
-          on branch loom/<epic-qid>/<sqid>
         - Dispatch:
             Agent(subagent_type="story-executor",
-                  prompt="story_qid=<sqid> worktree=<path> parent_branch=loom/<epic-qid>")
+                  prompt="story_qid=<sqid> parent_branch=loom/<epic-qid>")
+          # The story-executor calls EnterWorktree on startup to create
+          # its own worktree on branch loom/<epic-qid>/<sqid> off loom/<epic-qid>.
     wait for ALL parallel dispatches to complete
 
     # Wave 2: integrate each completed story sequentially
@@ -77,34 +77,79 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
    ```
 2. If `result.result == "ok"`:
    - `loom complete <epic-qid>`
-   - Invoke `superpowers:finishing-a-development-branch` to choose merge / PR / keep.
+   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
 3. Else: HALT with the validator's diagnostic. Do not auto-retry at the epic level — that's a human decision.
 
 ## Story (single-item) shape
 
 For `story_qid=...` entry:
 
-1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<story-qid>/` on branch `loom/<story-qid>` off `main`.
-2. Dispatch one story-executor:
+1. Dispatch one story-executor:
    ```
    Agent(subagent_type="story-executor",
-         prompt="story_qid=<sqid> worktree=<path> parent_branch=main")
+         prompt="story_qid=<sqid> parent_branch=main")
    ```
-3. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
+   The story-executor calls `EnterWorktree` on startup to create its own worktree on branch `loom/<sqid>` off `main`.
+2. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
    ```
    Agent(subagent_type="story-integrator",
-         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main worktree=<story-worktree>")
+         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main")
    ```
-4. If `result.ok`:
+3. If `result.ok`:
    - `loom complete <sqid>`
-   - Invoke `superpowers:finishing-a-development-branch`.
-5. If `result` is merge_failed or validation_failed:
+   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
+4. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
 
 ## Tracking work in the orchestrator's own TodoList
 
 In your own (main session) TodoList, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
+
+## Finalize branch
+
+On final validation success, this skill itself terminates the flow by integrating the validated branch into its parent. There is no further handoff.
+
+**What "the branch" means here:**
+- For epic flow: the epic branch `loom/<epic-qid>` is merged into `main`.
+- For story flow (`/story`): the story branch `loom/<sqid>` is merged into `main`.
+
+**Default behavior (merge + push):**
+
+```bash
+cd <repo-root>          # use the main checkout, not the worktree
+git fetch origin
+git checkout <parent>   # main for epics, main for /story flow
+git pull --ff-only
+git merge --no-ff <branch> -m "Merge <branch>: <one-line summary>"
+git push origin <parent>
+```
+
+Use `--no-ff` to preserve the branch boundary in history, matching the convention the story-integrator already uses for per-story merges into the epic branch.
+
+After a successful push, clean up the local branch and worktree:
+
+```bash
+git branch -d <branch>
+git worktree remove <worktree-path>   # if a worktree existed for this branch
+```
+
+**PR mode (only when the user explicitly asked):**
+
+If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, push the branch and open a PR:
+
+```bash
+git push -u origin <branch>
+gh pr create --base <parent> --head <branch> \
+  --title "<epic or story title>" \
+  --body "<summary derived from the loom item body>"
+```
+
+Leave the branch and worktree in place; the user will land the PR.
+
+**How to tell which mode applies.** Look at the original user request that triggered `/epic` or `/story`. If it contains the literal words "PR" or "pull request", use PR mode. Otherwise use the default merge + push. If genuinely ambiguous, ask once before acting.
+
+**Validation failure path is unchanged:** if the final validator returned a failure, halt and surface the diagnostic — do not attempt to finalize.
 
 ## Halt UX
 
@@ -119,7 +164,7 @@ Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd
 
 ## Constraints
 
-- **Never call `git push` or open PRs.** That's `finishing-a-development-branch`'s job.
+- **Never call `git push` or open PRs before final validation passes.** Pushing / PR-opening happens only in the Finalize branch section, after the final validator returns `ok`.
 - **Never call `loom complete` on a story before the integrator returns `ok`.**
 - **Never auto-retry at the epic level.** Halt and surface.
 - **Bounded retries**: 3 per story across waves.

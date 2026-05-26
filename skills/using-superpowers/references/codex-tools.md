@@ -43,8 +43,13 @@ BRANCH=$(git branch --show-current)
 - `GIT_DIR != GIT_COMMON` → already in a linked worktree (skip creation)
 - `BRANCH` empty → detached HEAD (cannot branch/push/PR from sandbox)
 
-See `using-git-worktrees` Step 0 and `finishing-a-development-branch`
-Step 1 for how each skill uses these signals.
+In Codex, the `EnterWorktree` tool creates a linked worktree on a named
+branch; `executing-plans` and the story-executor invoke it directly
+instead of routing through a dedicated skill. The same signals above
+also gate the in-skill Finalize step in `executing-plans` — for
+example, a detached HEAD means push/PR is impossible from the sandbox
+and the agent falls back to the Codex App Finishing flow described
+below.
 
 ## Codex App Finishing
 

@@ -25,7 +25,7 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 5. **Hand off to `superpowers:executing-plans`** with `epic_qid=<qid>`. The orchestrator creates the epic worktree, runs the wave loop, and runs final epic validation.
 
-6. On final validation pass, the orchestrator hands off to `superpowers:finishing-a-development-branch`. On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
+6. On final validation pass, the orchestrator finalizes the epic branch (merge into `main` + push, or `gh pr create` if the original `/epic` request explicitly named a PR). On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
 
 ## Constraints
 
@@ -37,4 +37,4 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 - Do NOT dispatch subagents directly. Each skill in the chain knows its part.
 - Do NOT write to loom directly. `writing-plans` handles all loom writes during planning; the agents/hooks handle writes during execution.
-- Do NOT create worktrees or branches yourself. `using-git-worktrees` (invoked by `executing-plans`) handles them.
+- Do NOT create worktrees or branches yourself — `executing-plans` and the story-executor handle them.
