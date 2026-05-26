@@ -25,7 +25,7 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 5. **Hand off to `superpowers:executing-plans`** with `epic_qid=<qid>`. The orchestrator creates the epic worktree, runs the wave loop, and runs final epic validation.
 
-6. On final validation pass, the orchestrator hands off to `superpowers:finishing-a-development-branch`. On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
+6. On final validation pass, the orchestrator finalizes the epic branch (merge into `main` + push, or `gh pr create` if the original `/epic` request explicitly named a PR). On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
 
 ## Constraints
 

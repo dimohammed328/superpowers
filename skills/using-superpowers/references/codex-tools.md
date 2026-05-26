@@ -45,9 +45,11 @@ BRANCH=$(git branch --show-current)
 
 In Codex, the `EnterWorktree` tool creates a linked worktree on a named
 branch; `executing-plans` and the story-executor invoke it directly
-instead of routing through a dedicated skill. See
-`finishing-a-development-branch` Step 1 for how the finishing flow uses
-the signals above.
+instead of routing through a dedicated skill. The same signals above
+also gate the in-skill Finalize step in `executing-plans` — for
+example, a detached HEAD means push/PR is impossible from the sandbox
+and the agent falls back to the Codex App Finishing flow described
+below.
 
 ## Codex App Finishing
 
