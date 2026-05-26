@@ -42,11 +42,11 @@ loop:
 
     # Wave 1: dispatch story-executor subagents in PARALLEL
     for each sqid in ready:
-        - Create child worktree: <repo>/.worktrees/<epic-qid>--<sqid> off loom/<epic-qid>
-          on branch loom/<epic-qid>/<sqid>
         - Dispatch:
             Agent(subagent_type="story-executor",
-                  prompt="story_qid=<sqid> worktree=<path> parent_branch=loom/<epic-qid>")
+                  prompt="story_qid=<sqid> parent_branch=loom/<epic-qid>")
+          # The story-executor calls EnterWorktree on startup to create
+          # its own worktree on branch loom/<epic-qid>/<sqid> off loom/<epic-qid>.
     wait for ALL parallel dispatches to complete
 
     # Wave 2: integrate each completed story sequentially
@@ -84,21 +84,21 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
 
 For `story_qid=...` entry:
 
-1. Invoke `superpowers:using-git-worktrees` to create `<repo>/.worktrees/<story-qid>/` on branch `loom/<story-qid>` off `main`.
-2. Dispatch one story-executor:
+1. Dispatch one story-executor:
    ```
    Agent(subagent_type="story-executor",
-         prompt="story_qid=<sqid> worktree=<path> parent_branch=main")
+         prompt="story_qid=<sqid> parent_branch=main")
    ```
-3. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
+   The story-executor calls `EnterWorktree` on startup to create its own worktree on branch `loom/<sqid>` off `main`.
+2. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
    ```
    Agent(subagent_type="story-integrator",
-         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main worktree=<story-worktree>")
+         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main")
    ```
-4. If `result.ok`:
+3. If `result.ok`:
    - `loom complete <sqid>`
    - Invoke `superpowers:finishing-a-development-branch`.
-5. If `result` is merge_failed or validation_failed:
+4. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
 
