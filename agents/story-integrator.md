@@ -2,6 +2,8 @@
 name: story-integrator
 description: Merges one completed story branch into its parent and validates the story's `## Validation Criteria` against the post-merge state. Tries trivial inline conflict resolution; reverts the merge on validation failure. Returns a structured result for the orchestrator.
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill
+model: sonnet
+effort: medium
 ---
 
 # Story Integrator
