@@ -1,0 +1,20 @@
+README.md
+  s_50d1860af8756f::t_37141a85680d76 168,170,172,174
+  s_50d1860af8756f::t_a40440031428b4 176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "71e55190e0875fc3a08bcd8c2cb3dfcc3c7fb5b0",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
