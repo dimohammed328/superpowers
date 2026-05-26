@@ -1,0 +1,26 @@
+docs/testing.md
+  s_e126036bf0cc53::t_62beac6ff5564f 70
+  s_e126036bf0cc53::t_b4996b83f88c37 78
+  s_e126036bf0cc53::t_c0db17889d0ac5 27,29
+  s_e126036bf0cc53::t_e25129269586de 3
+  s_e126036bf0cc53::t_aec67c59cf7b92 15
+  s_e126036bf0cc53::t_9563def2db2baf 40,42,44,46-51
+skills/using-superpowers/references/codex-tools.md
+  s_e126036bf0cc53::t_a21b80541b456e 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "e81d7df4826e3416773dfc1284066e7bcbfbf5c1",
+  "prompts": {},
+  "sessions": {
+    "s_e126036bf0cc53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69e2e879-4ed0-437d-bc9f-8483318965e8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
