@@ -37,4 +37,4 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 - Do NOT dispatch subagents directly. Each skill in the chain knows its part.
 - Do NOT write to loom directly. `writing-plans` handles all loom writes during planning; the agents/hooks handle writes during execution.
-- Do NOT create worktrees or branches yourself. `using-git-worktrees` (invoked by `executing-plans`) handles them.
+- Do NOT create worktrees or branches yourself — `executing-plans` and the story-executor handle them.
