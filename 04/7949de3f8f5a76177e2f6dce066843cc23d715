@@ -1,0 +1,20 @@
+tests/claude-code/test-worktree-native-preference.sh
+  s_50d1860af8756f::t_ccba579b4afeb5 29
+  s_50d1860af8756f::t_0c77be7be4dd80 132,159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "047949de3f8f5a76177e2f6dce066843cc23d715",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
