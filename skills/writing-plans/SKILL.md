@@ -107,7 +107,7 @@ Once the user signs off on the materialized tree, invoke **`superpowers:executin
 
 - **Always use `--body-file`.** Never use `--body` with multi-paragraph strings — temp files keep the loom CLI invocation clean and atomic.
 - **Always set `assignee` on epics and stories at creation.** Tasks never carry assignee.
-- **Never write a markdown plan file.** Loom items replace the old `docs/superpowers/plans/` artifacts.
+- **Never write a markdown plan file.** Loom items are the only plan artifact.
 - **One item per create call.** Don't try to batch via shell loops without checking exit codes — capture each created qid for later reference.
 
 ## No placeholders in loom item bodies
