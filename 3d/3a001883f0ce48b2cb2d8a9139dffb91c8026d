@@ -1,0 +1,19 @@
+skills/brainstorming/spec-document-reviewer-prompt.md
+  s_50d1860af8756f::t_e44836c34df2e9 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3d3a001883f0ce48b2cb2d8a9139dffb91c8026d",
+  "prompts": {},
+  "sessions": {
+    "s_50d1860af8756f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2810ff0f-8052-4f7d-8cf3-6b3ed957fd65",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
