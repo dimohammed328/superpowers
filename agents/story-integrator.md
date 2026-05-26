@@ -54,7 +54,7 @@ Whether you just merged or are running on the story branch directly:
 ### Step 3: Decide
 
 - **All criteria pass AND tests/lint/format are green:**
-  1. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case let `finishing-a-development-branch` decide cleanup.
+  1. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case leave the worktree in place and let the orchestrator's Finalize step (in `executing-plans`) clean it up after merge/push.
   2. Return:
      ```json
      {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
@@ -70,7 +70,7 @@ Whether you just merged or are running on the story branch directly:
 ## What you must NOT do
 
 - **Do NOT call `loom complete` or `loom reopen`.** The orchestrator handles status transitions based on your return value.
-- **Do NOT push, force-push, or create PRs.** That's `finishing-a-development-branch`'s job after the epic loop completes.
+- **Do NOT push, force-push, or create PRs.** Final integration (push or PR) happens in the `executing-plans` Finalize step after the epic-level validator passes.
 - **Do NOT modify the story's source files** to make criteria pass. If they don't pass on first observation, that's a `validation_failed`.
 - **Do NOT skip the tests/lint/format runs** even if criteria all observably pass.
 
