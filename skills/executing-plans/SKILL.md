@@ -282,6 +282,26 @@ When you halt, leave the workspace inspectable:
 
 Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd <epic-worktree> && loom tree <epic-qid>` to inspect; the failing story is `<sqid>` with these unmet criteria: ...").
 
+## Dispatch prompt contract
+
+When dispatching a story-executor subagent, the `prompt` field MUST contain
+exactly two fields and nothing more:
+
+```
+story_qid=<sqid> parent_branch=<branch>
+```
+
+**Do NOT include** any of the following in the dispatch prompt:
+- The epic body (or any part of it)
+- Sibling-story bodies (bodies of other stories in the same wave or epic)
+- Validation criteria of other stories
+- Any inlined context, background, or prose from loom items
+
+The story-executor fetches its own story body via `loom show <story_qid>` inside
+the subagent. It does not need — and must not receive — context that belongs to
+other items. Inlining such context creates cross-story contamination and
+violates the isolation guarantees of the worktree-per-executor model.
+
 ## Constraints
 
 - **Never call `git push` or open PRs before final validation passes.** Pushing / PR-opening happens only in the Finalize branch section, after the final validator returns `ok`.
