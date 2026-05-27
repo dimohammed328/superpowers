@@ -1,0 +1,25 @@
+docs/orchestrator-log.md
+  s_284f442d23d2d2::t_5940e9de25677c 1-107
+tests/hooks/test_loom_log_event_helper.sh
+  s_284f442d23d2d2::t_eadb2a5487ee7e 20-21
+  s_284f442d23d2d2::t_a803ac0aa73f4c 1-19,22-406
+hooks/lib/loom-log-event.sh
+  s_284f442d23d2d2::t_c05b47c24d3acc 1-162,164-174
+  s_284f442d23d2d2::t_77b352267f3040 163
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ab3e238bfa39a17b55198fccf31baeb88b07c2ba",
+  "prompts": {},
+  "sessions": {
+    "s_284f442d23d2d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "adf1c9a2-5b89-4c3b-b7fe-893164aa90ce",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
