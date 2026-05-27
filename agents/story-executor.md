@@ -89,14 +89,20 @@ If either looks wrong, STOP and report a diagnostic. Do NOT proceed.
 ### Step 2 — Record ownership in loom
 
 Run the literal `loom update` command shown inside your injected
-`## Loom Workflow Context` block. That command already has your real
-`session_id` and `agent_id` substituted. Copy it verbatim.
+`## Loom Workflow Context` block. The session and agent values in that
+command are **already pre-filled by the harness** — do NOT substitute or
+guess them. Copy the command **verbatim**, replacing only `<story-qid>`
+with the `story_qid` passed in your prompt.
 
-It will look like:
+The injected `## Loom Workflow Context` block contains a code block that
+looks like (with real IDs already filled in, not placeholders):
 
-```bash
-loom update <story_qid> assignee <session_id_from_context>:<agent_id_from_context>
 ```
+loom update <story-qid> assignee <real-session-id>:<real-agent-id>
+```
+
+where `<real-session-id>` and `<real-agent-id>` are concrete UUID values
+injected by the SubagentStart hook — not templates for you to fill in.
 
 ## Workflow
 
