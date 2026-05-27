@@ -55,9 +55,33 @@ See `docs/orchestrator-log.md` for the full semantic event vocabulary and per-ki
 
 ### Setup (once per `/epic`)
 
-1. Call `EnterWorktree` to enter a worktree on branch `loom/<epic-qid>` off `main`. The harness creates the worktree (typically at `<repo>/.worktrees/<epic-qid>/`) and switches the session into it.
-2. Confirm the working directory is the epic worktree (the harness sets cwd as part of `EnterWorktree`).
-3. Initialize retry counters file: `echo "{}" > .loom/retry-counters.json`.
+1. Call `EnterWorktree` with `name="loom/<epic-qid-dashed>"` to enter a
+   worktree for the epic. The harness creates the worktree at
+   `<repo>/.claude/worktrees/<name-with-slashes-replaced>/` on a branch
+   named `worktree-<name>` (the renamed-slash form), off the parent
+   session's HEAD (typically `main`).
+2. Confirm the working directory is the epic worktree (the harness sets
+   cwd as part of `EnterWorktree`) and record:
+   - `<epic_worktree>` — the absolute path printed by `pwd`.
+   - `<epic_branch>` — the branch name from `git rev-parse --abbrev-ref HEAD`.
+
+   You will pass both to story-integrator dispatches.
+3. Initialize retry counters file: `mkdir -p .loom && echo "{}" > .loom/retry-counters.json`.
+
+### How subagents create their own worktrees
+
+Story-executor agents are declared with `isolation: worktree` in their
+frontmatter. The Claude Code harness automatically creates a per-subagent
+worktree on dispatch — you do NOT pass an `isolation` parameter or specify
+a worktree path. The base branch is governed by the `worktree.baseRef`
+setting (must be `"head"` in `~/.claude/settings.json` so subagents branch
+off the orchestrator's current HEAD, i.e. the epic branch).
+
+The harness names the auto-worktree's branch `worktree-<random>` and
+places it at `<repo>/.claude/worktrees/<random>/`. The executor records
+both and reports them back in its result JSON as `branch` and `worktree`.
+You forward those exact values to the story-integrator — do NOT construct
+branch names from the story qid.
 
 ### Loop body (until no ready stories remain)
 
@@ -81,10 +105,19 @@ loop:
     for each sqid in ready:
         - Dispatch:
             Agent(subagent_type="story-executor",
-                  prompt="story_qid=<sqid> parent_branch=loom/<epic-qid>")
-          # The story-executor calls EnterWorktree on startup to create
-          # its own worktree on branch loom/<epic-qid>/<sqid> off loom/<epic-qid>.
+                  prompt="story_qid=<sqid> parent_branch=<epic_branch>")
+          # The harness creates the executor's worktree automatically via
+          # the agent's `isolation: worktree` frontmatter. The executor
+          # records its assigned branch + worktree path and returns them
+          # in its result JSON.
     wait for ALL parallel dispatches to complete
+
+    # Extract from each executor's return value the fields you need to
+    # dispatch the integrator. Each executor returns JSON of shape:
+    #   {"story_qid": "...", "branch": "worktree-<random>",
+    #    "worktree": "<repo>/.claude/worktrees/<random>/", "commits": [...],
+    #    "tasks_done": [...], "notes": "..."}
+    # Store per-sqid: executor_branch[sqid], executor_worktree[sqid].
 
     # Log wave completion with a brief outcome summary.
     hooks/lib/loom-log-event.sh \
@@ -99,13 +132,17 @@ loop:
     # Integrate each completed story sequentially
     for each sqid that the executor reported done (topo order):
         result = Agent(subagent_type="story-integrator",
-                       prompt="epic_qid=<epic-qid> story_qid=<sqid> branch=loom/<epic-qid>/<sqid> parent_branch=loom/<epic-qid> worktree=<epic-worktree>")
+                       prompt="epic_qid=<epic-qid> story_qid=<sqid> "
+                              "branch=<executor_branch[sqid]> "
+                              "parent_branch=<epic_branch> "
+                              "epic_worktree=<epic_worktree> "
+                              "story_worktree=<executor_worktree[sqid]>")
         if result.result == "ok":
             loom complete <sqid>
         elif result.result in ("merge_failed", "validation_failed"):
             # Discard the story; it goes back to ready and gets picked up next iteration.
-            rm -rf <repo>/.worktrees/<epic-qid>--<sqid>
-            git branch -D loom/<epic-qid>/<sqid>
+            git -C <epic_worktree> worktree remove --force <executor_worktree[sqid]>
+            git -C <epic_worktree> branch -D <executor_branch[sqid]>
             loom reopen <sqid>
             increment retry_counter[sqid] in .loom/retry-counters.json
             if retry_counter[sqid] >= 3:
@@ -145,11 +182,17 @@ For `story_qid=...` entry:
    Agent(subagent_type="story-executor",
          prompt="story_qid=<sqid> parent_branch=main")
    ```
-   The story-executor calls `EnterWorktree` on startup to create its own worktree on branch `loom/<sqid>` off `main`.
+   The harness creates the executor's worktree automatically (`isolation:
+   worktree` frontmatter). The executor returns `branch` and `worktree` in
+   its result JSON. Capture both.
 2. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
    ```
    Agent(subagent_type="story-integrator",
-         prompt="epic_qid=none story_qid=<sqid> branch=loom/<sqid> parent_branch=main")
+         prompt="epic_qid=none story_qid=<sqid> "
+                "branch=<executor_branch> "
+                "parent_branch=main "
+                "epic_worktree=<repo-root> "
+                "story_worktree=<executor_worktree>")
    ```
 3. If `result.ok`:
    - `loom complete <sqid>`
