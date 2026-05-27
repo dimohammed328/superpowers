@@ -9,15 +9,18 @@
 
 set -euo pipefail
 
+# Observed SubagentStart payload schema (verified 2026-05-26 against live Claude Code dispatch):
+#
+#   {
+#     "session_id": "<uuid>",   -- Claude session identifier (e.g. "01jw5jqnrreff8bqcxqnrsgqrd")
+#     "agent_id":   "<uuid>",   -- Subagent instance identifier (e.g. "01jw5jqp25b6ga55xaqp0r6mqy")
+#     "agent_type": "<string>"  -- Agent definition name (e.g. "story-executor")
+#   }
+#
+# Both session_id and agent_id are UUID-format strings when Claude Code dispatches a real
+# subagent. The hook reads both via jq paths .session_id and .agent_id (confirmed correct).
+
 input=$(cat)
-
-# Debug logging: if LOOM_SUBAGENT_DEBUG_LOG is set, append raw payload to that file.
-# This is used to capture live SubagentStart payloads for field-name verification.
-# To enable: export LOOM_SUBAGENT_DEBUG_LOG=/tmp/loom-subagent-debug.jsonl
-if [[ -n "${LOOM_SUBAGENT_DEBUG_LOG:-}" ]]; then
-  printf '%s\n' "$input" >> "$LOOM_SUBAGENT_DEBUG_LOG"
-fi
-
 agent_type=$(jq -r '.agent_type // ""' <<<"$input")
 
 case "$agent_type" in
