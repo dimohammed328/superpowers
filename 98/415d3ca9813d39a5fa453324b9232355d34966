@@ -1,0 +1,21 @@
+skills/executing-plans/SKILL.md
+  s_32a988a7adb3a4::t_a1ba9faa0d82ae 8-16
+agents/story-executor.md
+  s_32a988a7adb3a4::t_c22f049342e1fb 11-20,24-55,57-61,63,65-68,70-72,74-96,100-183,187-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "98415d3ca9813d39a5fa453324b9232355d34966",
+  "prompts": {},
+  "sessions": {
+    "s_32a988a7adb3a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9664994d-3c05-4c31-aebb-a1fe5577102c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
