@@ -5,6 +5,15 @@ description: "Use after writing-plans has materialized loom items. Orchestrates 
 
 # Executing Plans — loom-backed orchestrator
 
+<SUBAGENT-STOP>
+If you were dispatched as a subagent (story-executor, story-integrator,
+epic-validator, codebase-researcher, or any other agent type), STOP — this
+skill is not yours. It is the orchestrator's, and only the main session
+runs it. Subagents that invoke this skill will create nested orchestration
+loops, mis-write the parent session's worktree state, and corrupt the
+epic-wave invariants. Return to your dispatched task instructions instead.
+</SUBAGENT-STOP>
+
 This skill is the orchestrator. It runs in the main session (not a subagent) and dispatches the per-story / per-task work.
 
 **Announce at start:** "I'm using the executing-plans skill to orchestrate execution."
