@@ -25,6 +25,24 @@
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-subagent-context-inject.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
       }
     ],
     "TaskCreated": [
@@ -33,6 +51,14 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-created-guard.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
           }
         ]
       }
@@ -45,6 +71,14 @@
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-completed-sync.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -54,6 +88,44 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-inprogress-sync.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "TaskUpdate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
+      }
+    ],
+    "EnterWorktree": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+          }
+        ]
+      }
+    ],
+    "ExitWorktree": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
           }
         ]
       }
