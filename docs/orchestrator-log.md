@@ -62,18 +62,21 @@ The `--field key=value` flag on `loom-log-event.sh` appends arbitrary fields to 
 
 ## Mechanical Event-Kind Catalogue
 
-Mechanical kinds are emitted by the dispatcher hooks (wired in Story 2). The dispatcher calls `loom-log-event.sh` at each lifecycle boundary.
+Mechanical kinds are emitted by `hooks/loom-log.sh` (the dispatcher wired in Story 2). The dispatcher branches by hook event type and calls `loom-log-event.sh` at each lifecycle boundary.
 
-| Kind               | Emitted by          | When                                             | Payload fields                   |
-|--------------------|---------------------|--------------------------------------------------|----------------------------------|
-| `agent_start`      | SubagentStart hook  | An agent is spawned and enters its worktree.     | —                                |
-| `agent_stop`       | SubagentStop hook   | An agent's session ends (success or failure).    | `exit_code`                      |
-| `task_start`       | TaskUpdate hook     | A task transitions to `in_progress`.             | `task_qid`                       |
-| `task_complete`    | TaskCompleted hook  | A task is marked completed.                      | `task_qid`                       |
-| `task_blocked`     | TaskCreated guard   | A TaskCreate is blocked (invalid qid/status).    | `task_qid`, `reason`             |
-| `story_commit`     | PostToolUse(Bash)   | A commit is made on the story branch.            | `sha`, `branch`                  |
-| `story_merge`      | story-integrator    | A story branch is merged into the epic branch.   | `story_qid`, `sha`, `branch`     |
-| `story_conflict`   | story-integrator    | A merge attempt encounters a conflict.           | `story_qid`, `branch`            |
+| Kind                | Emitted by                            | When                                                      | Payload fields                       |
+|---------------------|---------------------------------------|-----------------------------------------------------------|--------------------------------------|
+| `task_created`      | `TaskCreated` hook                    | A TaskCreate tool call is observed.                       | `task_qid`, `subject`                |
+| `task_updated`      | `PostToolUse(TaskUpdate)` hook        | A TaskUpdate tool call is observed.                       | `task_qid`, `status`                 |
+| `task_completed`    | `TaskCompleted` hook                  | A task transitions to completed.                          | `task_qid`                           |
+| `subagent_start`    | `SubagentStart` hook                  | A subagent is spawned.                                    | —                                    |
+| `subagent_stop`     | `SubagentStop` hook                   | A subagent's session ends (success or failure).           | `exit_code` (when available)         |
+| `worktree_create`   | `EnterWorktree` hook or `PostToolUse(Bash)` matching `git worktree add` | A worktree is created.                                    | `path`, `branch`                     |
+| `worktree_delete`   | `ExitWorktree` hook or `PostToolUse(Bash)` matching `git worktree remove` | A worktree is removed.                                    | `path`, `branch`                     |
+| `git_commit`        | `PostToolUse(Bash)` matching `git commit` | A commit is made.                                         | `sha` (when parseable), `command`    |
+| `git_merge`         | `PostToolUse(Bash)` matching `git merge` | A merge is performed.                                     | `source_branch`, `target_branch`     |
+| `git_branch_delete` | `PostToolUse(Bash)` matching `git branch -D` | A branch is force-deleted.                                | `branch`                             |
+| `git_push`          | `PostToolUse(Bash)` matching `git push` | A push is performed.                                      | `remote`, `branch`                   |
 
 ### Semantic event kinds
 
@@ -120,7 +123,7 @@ Because timestamps are ISO 8601 UTC, lexicographic sort (`sort_by(.ts)`) is equi
 ### Sample lines
 
 ```jsonl
-{"schema_version":1,"ts":"2026-05-26T14:23:01Z","kind":"agent_start","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1"}
-{"schema_version":1,"ts":"2026-05-26T14:25:44Z","kind":"task_start","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1","task_qid":"superpowers:je66zjb:1:1"}
-{"schema_version":1,"ts":"2026-05-26T14:31:02Z","kind":"story_commit","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1","sha":"deadbeef","branch":"loom/superpowers-je66zjb-1"}
+{"schema_version":1,"ts":"2026-05-26T14:23:01Z","kind":"subagent_start","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1"}
+{"schema_version":1,"ts":"2026-05-26T14:25:44Z","kind":"task_updated","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1","task_qid":"superpowers:je66zjb:1:1","status":"in_progress"}
+{"schema_version":1,"ts":"2026-05-26T14:31:02Z","kind":"git_commit","epic_qid":"superpowers:je66zjb","agent_id":"sess-1:agent-3","session_id":"sess-1","agent_type":"story-executor","story_qid":"superpowers:je66zjb:1","sha":"deadbeef","command":"git commit -m \"feat: foundation\""}
 ```
