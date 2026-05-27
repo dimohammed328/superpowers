@@ -9,6 +9,17 @@
 
 set -euo pipefail
 
+# Observed SubagentStart payload schema (verified 2026-05-26 against live Claude Code dispatch):
+#
+#   {
+#     "session_id": "<uuid>",   -- Claude session identifier (e.g. "01jw5jqnrreff8bqcxqnrsgqrd")
+#     "agent_id":   "<uuid>",   -- Subagent instance identifier (e.g. "01jw5jqp25b6ga55xaqp0r6mqy")
+#     "agent_type": "<string>"  -- Agent definition name (e.g. "story-executor")
+#   }
+#
+# Both session_id and agent_id are UUID-format strings when Claude Code dispatches a real
+# subagent. The hook reads both via jq paths .session_id and .agent_id (confirmed correct).
+
 input=$(cat)
 agent_type=$(jq -r '.agent_type // ""' <<<"$input")
 
@@ -33,9 +44,16 @@ context=$(cat <<EOF
 - agent_id: ${agent_id}
 - agent_type: ${agent_type}
 
-If you are a **story-executor**: as your FIRST action, run
-\`loom update <story-qid> assignee ${session_id}:${agent_id}\` for the
-story qid passed in your prompt. This claims ownership for the audit trail.
+If you are a **story-executor**: as your FIRST action, run the command
+shown below **verbatim** (the session and agent values are already
+pre-filled — do NOT modify them). Replace only \`<story-qid>\` with the
+story qid passed in your prompt:
+
+\`\`\`bash
+loom update <story-qid> assignee ${session_id}:${agent_id}
+\`\`\`
+
+This claims ownership for the audit trail.
 
 The TaskCreated / TaskCompleted hooks are enforcing **strict mode** for
 your agent_type:

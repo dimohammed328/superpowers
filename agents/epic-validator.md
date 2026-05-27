@@ -20,6 +20,8 @@ The dispatching prompt contains:
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 1. `cd <worktree>` and confirm you are on `<branch>` with `git status` and `git rev-parse --abbrev-ref HEAD`.
 2. `loom show <epic_qid> --json | jq -r .body` — read the epic body. Extract the `## Validation Criteria` section.
 3. Emit `validation_start` to mark the entry point of the validation run:

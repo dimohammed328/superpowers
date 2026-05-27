@@ -30,6 +30,8 @@ The SubagentStart hook has injected your workflow context.
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 ### Step 1: Merge (skip if `/story` flow)
 
 If `epic_qid == "none"` (i.e., `/story` flow), skip to step 2 — there is no merge needed; you validate directly on the story branch in the worktree.

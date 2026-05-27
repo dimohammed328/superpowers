@@ -26,9 +26,9 @@ Borderline case? Ask the user one question with the two options and let them dec
 
 ## Mandatory checklist
 
-You MUST create a Claude TodoList task for each of these and complete in order:
+You MUST use TaskCreate to add a Task List item for each of these and complete in order:
 
-1. **Bind loom to this repo** — walk up from cwd looking for `.loom/state.json`. If absent, run `loom project create <repo-basename> -y` (loom auto-discovers the `origin` remote). Capture the project qid.
+1. **Bind loom to this repo** — walk up from cwd looking for `.loom/state.json`. If absent, run `loom -y project create <repo-basename>` (loom auto-discovers the `origin` remote). Capture the project qid.
 2. **Dispatch the codebase-researcher agent** with the user's description and the repo root. Wait for its report (~under 400 words).
 3. **Ask clarifying questions** — one at a time. Use the research report to ground each question in concrete context (files, symbols, behaviors). Prefer multiple-choice questions when possible. Cover: purpose, constraints, success criteria, out-of-scope.
 4. **Propose 2-3 approaches** with trade-offs and your recommendation. (Skip for trivial bug-fix stories.)
