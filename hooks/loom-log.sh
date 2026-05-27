@@ -3,7 +3,7 @@
 #
 # Wired to: TaskCreated, PostToolUse (matchers: TaskUpdate, Bash),
 #           TaskCompleted, SubagentStart, SubagentStop,
-#           EnterWorktree, ExitWorktree
+#           WorktreeCreate, WorktreeRemove
 #
 # Reads stdin JSON, detects event type from $CLAUDE_HOOK_EVENT env var
 # (or infers from JSON shape if unset), extracts relevant fields, and
@@ -53,8 +53,8 @@ if [[ -z "$event" ]]; then
   if [[ -n "$tool_name" ]]; then
     event="PostToolUse"
   elif echo "$input" | jq -e '.worktree_path' >/dev/null 2>&1; then
-    # Could be EnterWorktree or ExitWorktree; default to EnterWorktree
-    event="EnterWorktree"
+    # Could be WorktreeCreate or WorktreeRemove; default to WorktreeCreate
+    event="WorktreeCreate"
   elif echo "$input" | jq -e '.agent_type' >/dev/null 2>&1; then
     event="SubagentStart"
   fi
@@ -176,7 +176,7 @@ handle_subagent_stop() {
 }
 
 # ---------------------------------------------------------------------------
-# Branch: EnterWorktree → worktree_create
+# Branch: WorktreeCreate → worktree_create
 # ---------------------------------------------------------------------------
 handle_enter_worktree() {
   local worktree_path branch
@@ -191,7 +191,7 @@ handle_enter_worktree() {
 }
 
 # ---------------------------------------------------------------------------
-# Branch: ExitWorktree → worktree_delete
+# Branch: WorktreeRemove → worktree_delete
 # ---------------------------------------------------------------------------
 handle_exit_worktree() {
   local worktree_path branch
@@ -309,10 +309,10 @@ case "$event" in
   SubagentStop)
     handle_subagent_stop
     ;;
-  EnterWorktree)
+  WorktreeCreate)
     handle_enter_worktree
     ;;
-  ExitWorktree)
+  WorktreeRemove)
     handle_exit_worktree
     ;;
   PostToolUse)

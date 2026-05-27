@@ -110,7 +110,7 @@
         ]
       }
     ],
-    "EnterWorktree": [
+    "WorktreeCreate": [
       {
         "hooks": [
           {
@@ -120,7 +120,7 @@
         ]
       }
     ],
-    "ExitWorktree": [
+    "WorktreeRemove": [
       {
         "hooks": [
           {
