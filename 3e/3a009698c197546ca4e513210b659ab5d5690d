@@ -1,0 +1,20 @@
+agents/story-integrator.md
+  s_27d895aaf8ad65::t_a4b2b2208938d3 66-78,84-94
+  s_27d895aaf8ad65::t_776d2be913ad4b 30,34-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3e3a009698c197546ca4e513210b659ab5d5690d",
+  "prompts": {},
+  "sessions": {
+    "s_27d895aaf8ad65": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ad1e17f-045a-4fab-b58d-d4581533464f",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
