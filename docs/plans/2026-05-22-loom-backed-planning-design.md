@@ -321,7 +321,7 @@ else:
 **Orchestrator-owned state:**
 
 - `<epic-worktree>/.loom/retry-counters.json` — per-story retry counts, ephemeral
-- `<epic-worktree>/.loom/orchestrator.log` — wave-by-wave append log
+- Per-agent JSONL logs under `${XDG_STATE_HOME:-$HOME/.local/state}/loom/<project>/<epic_qid>/` — event trail written by `hooks/lib/loom-log-event.sh`
 - TodoList items in the orchestrator's own session use `[<story-qid>] <title>` subjects (permissive mode, since main session is not a defined agent_type)
 
 **Halt UX:** halts leave workspace inspectable — branches in place, worktrees in place, loom items reflect current status. User can `cd <epic-worktree>` and run `loom tree <epic-qid>` to assess.
@@ -441,7 +441,7 @@ For the main `/epic` session, `${CLAUDE_SESSION_ID}` substitution in SKILL.md ha
 | Epic validation fails at end | epic-validator returns failure | Halt; user inspects, decides | 0 retries (human-only decision) |
 | Hook strict-mode rejection on TaskCreate | TaskCreated hook blocks | Agent receives the error in its context, self-corrects | N/A — agent-level loop |
 
-Halt UX: workspace inspectable; `loom tree <epic-qid>` shows current state; `<epic-worktree>/.loom/orchestrator.log` has the full trail; retry counters preserved in case the user wants to manually reset.
+Halt UX: workspace inspectable; `loom tree <epic-qid>` shows current state; per-agent JSONL logs under `${XDG_STATE_HOME:-$HOME/.local/state}/loom/<project>/<epic_qid>/` have the full event trail (see `docs/orchestrator-log.md`); retry counters preserved in case the user wants to manually reset.
 
 ---
 
