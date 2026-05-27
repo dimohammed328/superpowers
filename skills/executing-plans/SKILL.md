@@ -106,6 +106,8 @@ loop:
         - Dispatch:
             Agent(subagent_type="story-executor",
                   prompt="story_qid=<sqid> parent_branch=<epic_branch>")
+          # Prompt is exactly two fields — see "Dispatch prompt contract" section.
+          # Do NOT add the epic body, sibling-story bodies, or other context.
           # The harness creates the executor's worktree automatically via
           # the agent's `isolation: worktree` frontmatter. The executor
           # records its assigned branch + worktree path and returns them
@@ -182,6 +184,8 @@ For `story_qid=...` entry:
    Agent(subagent_type="story-executor",
          prompt="story_qid=<sqid> parent_branch=main")
    ```
+   Prompt is exactly two fields — see "Dispatch prompt contract" section.
+   Do NOT add the story body, epic body, or any extra context.
    The harness creates the executor's worktree automatically (`isolation:
    worktree` frontmatter). The executor returns `branch` and `worktree` in
    its result JSON. Capture both.
