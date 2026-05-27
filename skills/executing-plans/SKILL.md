@@ -21,9 +21,26 @@ Plus the bound loom project qid and `${CLAUDE_SESSION_ID}` (for orchestrator-sid
 
 Maintained under `<epic-worktree>/.loom/`:
 - `retry-counters.json` — per-story retry counts across waves
-- `orchestrator.log` — append-only wave-by-wave log
 
-Both are gitignored by loom's `.loom/.gitignore`.
+This file is gitignored by loom's `.loom/.gitignore`.
+
+## Semantic event logging
+
+The orchestrator emits semantic events via `hooks/lib/loom-log-event.sh` at key decision points — moments the mechanical hooks (SubagentStart, TaskUpdate, etc.) cannot observe. These are wave composition, retry rationale, validation outcome interpretation, and the finalize decision. Mechanical events (agent lifecycle, task transitions, commits) are handled automatically; do not re-emit them.
+
+Base invocation pattern:
+```bash
+hooks/lib/loom-log-event.sh \
+  --kind <semantic_kind> \
+  --epic-qid <epic_qid> \
+  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-executor" \
+  [--story-qid <sqid>] \
+  [--field key=value] ...
+```
+
+See `docs/orchestrator-log.md` for the full semantic event vocabulary and per-kind payload spec.
 
 ## Epic wave loop
 
@@ -40,7 +57,18 @@ loop:
     ready=$(loom ready <epic-qid> --type story --json)
     if [empty]: break
 
-    # Wave 1: dispatch story-executor subagents in PARALLEL
+    # Wave N: dispatch story-executor subagents in PARALLEL
+    # Log wave composition before dispatch — the orchestrator knows which stories
+    # are in the wave; mechanical hooks only see individual subagent starts.
+    hooks/lib/loom-log-event.sh \
+      --kind wave_start \
+      --epic-qid <epic_qid> \
+      --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+      --session-id "$CLAUDE_SESSION_ID" \
+      --agent-type "story-executor" \
+      --field "wave_index=<N>" \
+      --field "story_qids=<sqid1> <sqid2> ..."
+
     for each sqid in ready:
         - Dispatch:
             Agent(subagent_type="story-executor",
@@ -49,7 +77,17 @@ loop:
           # its own worktree on branch loom/<epic-qid>/<sqid> off loom/<epic-qid>.
     wait for ALL parallel dispatches to complete
 
-    # Wave 2: integrate each completed story sequentially
+    # Log wave completion with a brief outcome summary.
+    hooks/lib/loom-log-event.sh \
+      --kind wave_complete \
+      --epic-qid <epic_qid> \
+      --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+      --session-id "$CLAUDE_SESSION_ID" \
+      --agent-type "story-executor" \
+      --field "wave_index=<N>" \
+      --note "<M ok, K failed>"
+
+    # Integrate each completed story sequentially
     for each sqid that the executor reported done (topo order):
         result = Agent(subagent_type="story-integrator",
                        prompt="epic_qid=<epic-qid> story_qid=<sqid> branch=loom/<epic-qid>/<sqid> parent_branch=loom/<epic-qid> worktree=<epic-worktree>")
@@ -63,7 +101,16 @@ loop:
             increment retry_counter[sqid] in .loom/retry-counters.json
             if retry_counter[sqid] >= 3:
                 HALT with diagnostic — surface result.reason / failed_criteria to the user
-        log everything to .loom/orchestrator.log
+            # Log the retry decision so the audit trail captures the rationale.
+            hooks/lib/loom-log-event.sh \
+              --kind retry_decision \
+              --epic-qid <epic_qid> \
+              --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+              --session-id "$CLAUDE_SESSION_ID" \
+              --agent-type "story-executor" \
+              --story-qid <sqid> \
+              --field "attempt=<retry_counter[sqid]>" \
+              --field "reason=<result.result>: <brief description>"
 ```
 
 To dispatch subagents in parallel, send a single message with multiple `Agent` tool calls.
@@ -116,6 +163,18 @@ On final validation success, this skill itself terminates the flow by integratin
 
 **Default behavior (merge + push):**
 
+Before merging, emit an `epic_finalize` event so the log captures the finalize decision:
+```bash
+hooks/lib/loom-log-event.sh \
+  --kind epic_finalize \
+  --epic-qid <epic_qid> \
+  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-executor" \
+  --field "merged_to=<parent>"
+```
+
+Then merge and push:
 ```bash
 cd <repo-root>          # use the main checkout, not the worktree
 git fetch origin
@@ -136,13 +195,22 @@ git worktree remove <worktree-path>   # if a worktree existed for this branch
 
 **PR mode (only when the user explicitly asked):**
 
-If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, push the branch and open a PR:
+If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, emit `epic_finalize` with a `pr_url` once the PR is created, then push the branch and open a PR:
 
 ```bash
 git push -u origin <branch>
-gh pr create --base <parent> --head <branch> \
+pr_url=$(gh pr create --base <parent> --head <branch> \
   --title "<epic or story title>" \
-  --body "<summary derived from the loom item body>"
+  --body "<summary derived from the loom item body>")
+
+hooks/lib/loom-log-event.sh \
+  --kind epic_finalize \
+  --epic-qid <epic_qid> \
+  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-executor" \
+  --field "merged_to=<parent>" \
+  --field "pr_url=${pr_url}"
 ```
 
 Leave the branch and worktree in place; the user will land the PR.
@@ -157,7 +225,7 @@ When you halt, leave the workspace inspectable:
 - Branches stay in place
 - Worktrees stay in place (the failed-story worktree was deleted; others remain)
 - Loom items reflect current status
-- `.loom/orchestrator.log` has the full trail
+- The per-agent JSONL logs under `${XDG_STATE_HOME:-$HOME/.local/state}/loom/<project>/<epic_qid>/` have the full event trail; merge and sort by `ts` to reconstruct the timeline (see `docs/orchestrator-log.md`)
 - `.loom/retry-counters.json` shows what's been retried
 
 Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd <epic-worktree> && loom tree <epic-qid>` to inspect; the failing story is `<sqid>` with these unmet criteria: ...").
