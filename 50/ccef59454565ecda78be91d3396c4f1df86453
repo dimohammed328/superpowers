@@ -1,0 +1,27 @@
+skills/using-superpowers/references/codex-tools.md
+  s_32a988a7adb3a4::t_731bb9430a47ae 11
+skills/using-superpowers/references/gemini-tools.md
+  s_32a988a7adb3a4::t_da55478f55b373 13
+skills/brainstorming/SKILL.md
+  s_32a988a7adb3a4::t_07fbe8b00b6325 29
+skills/executing-plans/SKILL.md
+  s_32a988a7adb3a4::t_ba50550fb2eeec 204,206
+skills/using-superpowers/references/copilot-tools.md
+  s_32a988a7adb3a4::t_673cccec2f5267 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "50ccef59454565ecda78be91d3396c4f1df86453",
+  "prompts": {},
+  "sessions": {
+    "s_32a988a7adb3a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9664994d-3c05-4c31-aebb-a1fe5577102c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
