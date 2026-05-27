@@ -9,7 +9,7 @@ The user has invoked `/story <description>`. The description is in `$ARGUMENTS`.
 
 ## Mandatory sequence
 
-1. **Bind loom** to this repo (same as `/epic`: walk up for `.loom/state.json`; `loom project create <repo-basename> -y` if absent).
+1. **Bind loom** to this repo (same as `/epic`: walk up for `.loom/state.json`; `loom -y project create <repo-basename>` if absent).
 
 2. **Identify the target epic**: the project's default `backlog` epic (qid `<project>:backlog`). Loom auto-creates the backlog epic on every project at schema_version=2 and later; if it's missing (older project), the `loom story create` command auto-creates it on first use.
 
