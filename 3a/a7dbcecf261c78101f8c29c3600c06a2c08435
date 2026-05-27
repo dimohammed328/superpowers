@@ -1,0 +1,24 @@
+.claude-plugin/plugin.json
+  s_284f442d23d2d2::t_eb9126144635e7 28-45,56-63,74-81,93-128
+tests/hooks/test_loom_log_dispatch.sh
+  s_284f442d23d2d2::t_9a20ecf63e2b07 1-742
+hooks/loom-log.sh
+  s_284f442d23d2d2::t_d241529162efc2 1-234,236-339
+  s_284f442d23d2d2::t_b71ae1f1e1b07c 235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3aa7dbcecf261c78101f8c29c3600c06a2c08435",
+  "prompts": {},
+  "sessions": {
+    "s_284f442d23d2d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "adf1c9a2-5b89-4c3b-b7fe-893164aa90ce",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
