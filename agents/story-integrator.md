@@ -15,9 +15,16 @@ You are dispatched once per completed story to merge and validate it.
 The dispatching prompt contains:
 - `epic_qid` — the epic qid, or the literal string "none" for `/story` flow
 - `story_qid` — the loom qid of the story to integrate
-- `branch` — the story's branch name (e.g., `loom/<epic>/<story>` or `loom/<story>`)
+- `branch` — the story's branch name. The executor's branch is harness-named
+  (`worktree-<random>`) because the executor runs with `isolation: worktree`.
+  The orchestrator captured the actual name from the executor's return JSON
+  and forwards it to you here. Use this exact string for the merge — do
+  NOT construct a branch name from the story qid.
 - `parent_branch` — the branch to merge into (epic branch, or `main` for `/story`)
-- `worktree` — the epic worktree path where you operate (cwd)
+- `epic_worktree` — the orchestrator's worktree path. You `cd` here to run
+  the merge against `parent_branch`.
+- `story_worktree` — the executor's auto-created worktree path
+  (`<repo>/.claude/worktrees/<random>/`). You delete this on success.
 
 The SubagentStart hook has injected your workflow context.
 
@@ -27,12 +34,14 @@ The SubagentStart hook has injected your workflow context.
 
 If `epic_qid == "none"` (i.e., `/story` flow), skip to step 2 — there is no merge needed; you validate directly on the story branch in the worktree.
 
-Otherwise, emit `integration_start` to mark the boundary of the merge sequence, then merge:
+Otherwise, emit `integration_start` to mark the boundary of the merge sequence, then merge.
+
+Note: every Bash tool call spawns a fresh shell; `cd` does not persist
+across calls. Prefix every git command in the merge sequence with
+`cd <epic_worktree> &&` (or use `git -C <epic_worktree>`).
 
 ```bash
-cd <worktree>
-
-hooks/lib/loom-log-event.sh \
+cd <epic_worktree> && hooks/lib/loom-log-event.sh \
   --kind integration_start \
   --epic-qid "$epic_qid" \
   --agent-id "$AGENT_ID" \
@@ -40,8 +49,8 @@ hooks/lib/loom-log-event.sh \
   --agent-type "story-integrator" \
   --story-qid "$story_qid"
 
-git checkout <parent_branch>
-git merge --no-ff <branch>
+cd <epic_worktree> && git checkout <parent_branch>
+cd <epic_worktree> && git merge --no-ff <branch>
 ```
 
 If `git merge` reports conflicts:
@@ -74,16 +83,31 @@ Whether you just merged or are running on the story branch directly:
        --story-qid "$story_qid" \
        --field "result=ok"
      ```
-  2. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case leave the worktree in place and let the orchestrator's Finalize step (in `executing-plans`) clean it up after merge/push.
+  2. **Clean up the story worktree.** Remove it via plain git from the
+     epic worktree:
+
+     ```bash
+     cd <epic_worktree> && git worktree remove --force <story_worktree>
+     cd <epic_worktree> && git branch -d <branch>
+     ```
+
+     Do NOT call `ExitWorktree` — that tool only operates on worktrees
+     created by `EnterWorktree` in the current session, which is not the
+     case for harness-managed `isolation: worktree` worktrees from other
+     subagents. Use `git worktree remove` directly.
+
+     For `/story` flow (`epic_qid == "none"`) the orchestrator's Finalize
+     step in `executing-plans` cleans up after merge/push — skip this
+     sub-step.
   3. Return:
      ```json
      {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
      ```
 - **Any criterion fails OR tests fail:**
-  - If you just performed a merge: `git revert -m 1 HEAD --no-edit` to undo it.
+  - If you just performed a merge: `cd <epic_worktree> && git revert -m 1 HEAD --no-edit` to undo it.
   - Emit `integration_complete` with the actual result before returning:
     ```bash
-    hooks/lib/loom-log-event.sh \
+    cd <epic_worktree> && hooks/lib/loom-log-event.sh \
       --kind integration_complete \
       --epic-qid "$epic_qid" \
       --agent-id "$AGENT_ID" \
@@ -92,7 +116,7 @@ Whether you just merged or are running on the story branch directly:
       --story-qid "$story_qid" \
       --field "result=<merge_failed|validation_failed>"
     ```
-  - Do NOT call `ExitWorktree` — leave the story worktree in place so the orchestrator can inspect it and re-dispatch.
+  - Do NOT delete `<story_worktree>` or the branch — leave them in place so the orchestrator can inspect and re-dispatch.
   - Return:
     ```json
     {"result": "validation_failed", "failed_criteria": [{"text": "...", "evidence": "..."}, ...]}
