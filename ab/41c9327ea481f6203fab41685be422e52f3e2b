@@ -1,0 +1,19 @@
+tests/skills/test_using_loom_skill.sh
+  s_78be3a0685e602::t_cd58bff8fe504e 79-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ab41c9327ea481f6203fab41685be422e52f3e2b",
+  "prompts": {},
+  "sessions": {
+    "s_78be3a0685e602": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b178f1ef-75ef-482d-9e29-f21c36323598",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
