@@ -68,7 +68,7 @@ Read the story body (with \`## Validation Criteria\`) via
 \`loom order <story-qid>\`.
 
 If you are a **story-executor**: emit exactly one \`TaskCreate\` per task
-returned by \`loom order\` — your TodoList must have one entry per child
+returned by \`loom order\` — your Task List must have one entry per child
 task, never a single entry for the story qid itself. With N tasks
 returned, expect N TaskCreate calls before any task work begins.
 EOF
