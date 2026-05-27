@@ -1,0 +1,21 @@
+agents/story-executor.md
+  s_78be3a0685e602::t_76134a3431e2c5 92-95,97-98,101-105
+tests/hooks/test_story_executor_assignee_directive.sh
+  s_78be3a0685e602::t_8dc90ea210af63 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fcb6ad44da5d28bc0ad2112eb9ab5bca6cc47867",
+  "prompts": {},
+  "sessions": {
+    "s_78be3a0685e602": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b178f1ef-75ef-482d-9e29-f21c36323598",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
