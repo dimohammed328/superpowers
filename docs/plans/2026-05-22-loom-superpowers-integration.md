@@ -1352,7 +1352,7 @@ loop:
             increment retry_counter[sqid] in .loom/retry-counters.json
             if retry_counter[sqid] >= 3:
                 HALT with diagnostic — surface result.reason / failed_criteria to the user
-        log everything to .loom/orchestrator.log
+        # semantic events logged via hooks/lib/loom-log-event.sh (see docs/orchestrator-log.md)
 ```
 
 To dispatch subagents in parallel, send a single message with multiple `Agent` tool calls.
@@ -1401,7 +1401,7 @@ When you halt, leave the workspace inspectable:
 - Branches stay in place
 - Worktrees stay in place (the failed-story worktree was deleted; others remain)
 - Loom items reflect current status
-- `.loom/orchestrator.log` has the full trail
+- Per-agent JSONL logs under `${XDG_STATE_HOME:-$HOME/.local/state}/loom/<project>/<epic_qid>/` have the full event trail (see `docs/orchestrator-log.md`)
 - `.loom/retry-counters.json` shows what's been retried
 
 Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd <epic-worktree> && loom tree <epic-qid>` to inspect; the failing story is `<sqid>` with these unmet criteria: ...").
