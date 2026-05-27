@@ -106,6 +106,8 @@ loop:
         - Dispatch:
             Agent(subagent_type="story-executor",
                   prompt="story_qid=<sqid> parent_branch=<epic_branch>")
+          # Prompt is exactly two fields — see "Dispatch prompt contract" section.
+          # Do NOT add the epic body, sibling-story bodies, or other context.
           # The harness creates the executor's worktree automatically via
           # the agent's `isolation: worktree` frontmatter. The executor
           # records its assigned branch + worktree path and returns them
@@ -182,6 +184,8 @@ For `story_qid=...` entry:
    Agent(subagent_type="story-executor",
          prompt="story_qid=<sqid> parent_branch=main")
    ```
+   Prompt is exactly two fields — see "Dispatch prompt contract" section.
+   Do NOT add the story body, epic body, or any extra context.
    The harness creates the executor's worktree automatically (`isolation:
    worktree` frontmatter). The executor returns `branch` and `worktree` in
    its result JSON. Capture both.
@@ -281,6 +285,26 @@ When you halt, leave the workspace inspectable:
 - `.loom/retry-counters.json` shows what's been retried
 
 Tell the user where things stand and suggest concrete next steps (e.g., "Run `cd <epic-worktree> && loom tree <epic-qid>` to inspect; the failing story is `<sqid>` with these unmet criteria: ...").
+
+## Dispatch prompt contract
+
+When dispatching a story-executor subagent, the `prompt` field MUST contain
+exactly two fields and nothing more:
+
+```
+story_qid=<sqid> parent_branch=<branch>
+```
+
+**Do NOT include** any of the following in the dispatch prompt:
+- The epic body (or any part of it)
+- Sibling-story bodies (bodies of other stories in the same wave or epic)
+- Validation criteria of other stories
+- Any inlined context, background, or prose from loom items
+
+The story-executor fetches its own story body via `loom show <story_qid>` inside
+the subagent. It does not need — and must not receive — context that belongs to
+other items. Inlining such context creates cross-story contamination and
+violates the isolation guarantees of the worktree-per-executor model.
 
 ## Constraints
 
