@@ -47,6 +47,8 @@ Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines)
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 ### Step 1: Compose body files
 
 In a temp directory (`mktemp -d`), write one markdown file per loom item to be created. Name them descriptively (e.g., `epic.md`, `story-1.md`, `task-1-1.md`).

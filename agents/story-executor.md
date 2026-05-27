@@ -100,6 +100,8 @@ loom update <story_qid> assignee <session_id_from_context>:<agent_id_from_contex
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 ### Step 3 — Read the story body
 
 ```bash
