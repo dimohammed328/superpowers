@@ -41,9 +41,16 @@ context=$(cat <<EOF
 - agent_id: ${agent_id}
 - agent_type: ${agent_type}
 
-If you are a **story-executor**: as your FIRST action, run
-\`loom update <story-qid> assignee ${session_id}:${agent_id}\` for the
-story qid passed in your prompt. This claims ownership for the audit trail.
+If you are a **story-executor**: as your FIRST action, run the command
+shown below **verbatim** (the session and agent values are already
+pre-filled — do NOT modify them). Replace only \`<story-qid>\` with the
+story qid passed in your prompt:
+
+\`\`\`bash
+loom update <story-qid> assignee ${session_id}:${agent_id}
+\`\`\`
+
+This claims ownership for the audit trail.
 
 The TaskCreated / TaskCompleted hooks are enforcing **strict mode** for
 your agent_type:
