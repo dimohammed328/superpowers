@@ -27,10 +27,19 @@ The SubagentStart hook has injected your workflow context.
 
 If `epic_qid == "none"` (i.e., `/story` flow), skip to step 2 — there is no merge needed; you validate directly on the story branch in the worktree.
 
-Otherwise:
+Otherwise, emit `integration_start` to mark the boundary of the merge sequence, then merge:
 
 ```bash
 cd <worktree>
+
+hooks/lib/loom-log-event.sh \
+  --kind integration_start \
+  --epic-qid "$epic_qid" \
+  --agent-id "$AGENT_ID" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-integrator" \
+  --story-qid "$story_qid"
+
 git checkout <parent_branch>
 git merge --no-ff <branch>
 ```
@@ -54,13 +63,35 @@ Whether you just merged or are running on the story branch directly:
 ### Step 3: Decide
 
 - **All criteria pass AND tests/lint/format are green:**
-  1. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case leave the worktree in place and let the orchestrator's Finalize step (in `executing-plans`) clean it up after merge/push.
-  2. Return:
+  1. Emit `integration_complete` with `result=ok`:
+     ```bash
+     hooks/lib/loom-log-event.sh \
+       --kind integration_complete \
+       --epic-qid "$epic_qid" \
+       --agent-id "$AGENT_ID" \
+       --session-id "$CLAUDE_SESSION_ID" \
+       --agent-type "story-integrator" \
+       --story-qid "$story_qid" \
+       --field "result=ok"
+     ```
+  2. **Clean up the story worktree.** Call `ExitWorktree` (the harness worktree-exit tool) to remove the story worktree on branch `<branch>`. This is part of the success path only — the orchestrator's failure path already deletes the worktree itself when retrying. Skip this step for `/story` flow (`epic_qid == "none"`) when the integrator is itself running inside the story worktree; in that case leave the worktree in place and let the orchestrator's Finalize step (in `executing-plans`) clean it up after merge/push.
+  3. Return:
      ```json
      {"result": "ok", "merge_sha": "<sha or null>", "criteria": [{"text": "...", "pass": true, "evidence": "..."}, ...]}
      ```
 - **Any criterion fails OR tests fail:**
   - If you just performed a merge: `git revert -m 1 HEAD --no-edit` to undo it.
+  - Emit `integration_complete` with the actual result before returning:
+    ```bash
+    hooks/lib/loom-log-event.sh \
+      --kind integration_complete \
+      --epic-qid "$epic_qid" \
+      --agent-id "$AGENT_ID" \
+      --session-id "$CLAUDE_SESSION_ID" \
+      --agent-type "story-integrator" \
+      --story-qid "$story_qid" \
+      --field "result=<merge_failed|validation_failed>"
+    ```
   - Do NOT call `ExitWorktree` — leave the story worktree in place so the orchestrator can inspect it and re-dispatch.
   - Return:
     ```json
