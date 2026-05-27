@@ -60,27 +60,50 @@ For story qid `<sqid>` (e.g. `superpowers:65wxnvr:1`):
 - worktree path: `<repo_root>/.worktrees/<sqid_dashed>` (e.g.
   `/Users/danish/tech/superpowers/.worktrees/superpowers-65wxnvr-1`)
 
-Run, from your current cwd:
+Determine the absolute repo root and your worktree path. Then run, as a
+single Bash call:
 
 ```bash
-REPO_ROOT=$(git rev-parse --show-toplevel)
-# strip any .claude/worktrees/... suffix to get the real repo root
-REPO_ROOT=$(cd "$REPO_ROOT" && git rev-parse --path-format=absolute --git-common-dir | xargs dirname)
-
-SQID_DASHED=$(echo "<story_qid>" | tr ':' '-')
-BRANCH="loom/${SQID_DASHED}"
-WORKTREE="${REPO_ROOT}/.worktrees/${SQID_DASHED}"
-
-git worktree add -b "${BRANCH}" "${WORKTREE}" "<parent_branch>"
-cd "${WORKTREE}"
+git worktree add -b "loom/<sqid_dashed>" "<absolute_repo_root>/.worktrees/<sqid_dashed>" "<parent_branch>"
 ```
 
-Substitute the literal values from your dispatch prompt for `<story_qid>`
-and `<parent_branch>`. After this, every subsequent command in this
-procedure runs from inside `${WORKTREE}`.
+Substitute the literal values into the command (`<sqid_dashed>`, the
+absolute path, and `<parent_branch>` from your dispatch prompt). Confirm
+success:
 
-Confirm with `pwd` and `git rev-parse --abbrev-ref HEAD` that you are in
-the new worktree on the new branch before proceeding.
+```bash
+git -C "<absolute_repo_root>/.worktrees/<sqid_dashed>" rev-parse --abbrev-ref HEAD
+```
+
+The output must be exactly `loom/<sqid_dashed>`.
+
+**Record the absolute worktree path now.** From this point onward, refer
+to it as `<WORKTREE>` and substitute the literal absolute path into every
+Bash command — see "Bash shell state" below.
+
+### Bash shell state — critical for the rest of this procedure
+
+In this harness, every Bash tool call spawns a fresh shell. **`cd` does
+not persist across Bash calls.** Setting a shell variable in one call has
+no effect on the next. The cwd is re-anchored to the orchestrator's
+worktree (NOT your story worktree) at the start of every Bash call.
+
+Therefore every Bash call after Step 1 — including the loom commands in
+Steps 2-7, the test commands inside your TDD loop, and your git commits —
+**MUST be one of these two forms**:
+
+- Prefix-cd form: `cd <WORKTREE> && <your command>` — use this for
+  test runners, file-system-heavy commands, anything that reads from cwd.
+- Git `-C` form: `git -C <WORKTREE> <subcommand>` — use this for plain
+  git ops (status, add, commit, log, diff). Equivalent to cd-and-run.
+
+For Edit / Write tool calls, always pass the absolute path under
+`<WORKTREE>` — those tools don't depend on shell cwd.
+
+If you forget the prefix, your commits will land on the wrong branch
+(the orchestrator's), exactly as observed in the diagnostic that produced
+this rewrite. There is no recovery from that without manual cleanup —
+prefix every Bash call.
 
 ### Step 2 — Record ownership
 
@@ -100,7 +123,7 @@ loom update <story_qid> assignee <session_id_from_context>:<agent_id_from_contex
 ### Step 3 — Read the story body
 
 ```bash
-loom show <story_qid> --json | jq .body
+cd <WORKTREE> && loom show <story_qid> --json | jq .body
 ```
 
 Locate the `## Validation Criteria` section. This tells you what "done"
@@ -109,7 +132,7 @@ looks like for the story as a whole.
 ### Step 4 — Get your task list from `loom order`
 
 ```bash
-loom order <story_qid> --json
+cd <WORKTREE> && loom order <story_qid> --json
 ```
 
 This returns the topologically sorted task list. **This is your source of
@@ -152,8 +175,29 @@ For each task in order:
   → refactor.
 - Run **verification** (invoke `superpowers:verification-before-completion`
   skill) before claiming the task done.
-- Commit on the story branch (you're already on it from step 1) with a
-  trailer line `Loom-task: <task-qid>`.
+- Commit on the story branch. **Use `git -C <WORKTREE>` for every git
+  command** — do NOT rely on a previous `cd` having persisted. Commit
+  trailer line: `Loom-task: <task-qid>`. Example:
+
+  ```bash
+  git -C <WORKTREE> add <files>
+  git -C <WORKTREE> commit -m "<subject>" -m "Loom-task: <task-qid>"
+  ```
+
+  Or equivalently `cd <WORKTREE> && git add ... && git commit ...` within
+  a single Bash call.
+
+- Verify after commit:
+
+  ```bash
+  git -C <WORKTREE> rev-parse --abbrev-ref HEAD
+  git -C <WORKTREE> log --oneline -1
+  ```
+
+  The branch must still be `loom/<sqid_dashed>` and the most recent commit
+  must be yours. If the branch shows something else, STOP — you committed
+  to the wrong branch and must report the failure to the orchestrator.
+
 - Mark the task `completed`. The `loom-task-completed-sync` hook
   automatically calls `loom complete <task-qid>`.
 
