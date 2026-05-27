@@ -74,12 +74,31 @@ Mechanical kinds are emitted by the dispatcher hooks (wired in Story 2). The dis
 | `story_commit`     | PostToolUse(Bash)   | A commit is made on the story branch.            | `sha`, `branch`                  |
 | `story_merge`      | story-integrator    | A story branch is merged into the epic branch.   | `story_qid`, `sha`, `branch`     |
 | `story_conflict`   | story-integrator    | A merge attempt encounters a conflict.           | `story_qid`, `branch`            |
-| `validation_start` | epic-validator      | Epic-level validation begins.                    | —                                |
-| `validation_result`| epic-validator      | Epic-level validation completes.                 | `result` (`pass` or `fail`), `note` |
 
 ### Semantic event kinds
 
-Semantic kinds are emitted from skill prose (e.g. `superpowers:brainstorming`, `superpowers:test-driven-development`) to record AI-level decision points. These are defined and enumerated in Story 3. See Story 3 implementation for the full catalogue.
+Semantic kinds are emitted from orchestrator and agent skill prose to record AI-level decision points that mechanical hooks cannot observe — wave composition, retry rationale, validation outcome interpretation, and the finalize decision. The orchestrator's `agent_id` for semantic-event logging defaults to `${CLAUDE_SESSION_ID}-orchestrator`.
+
+| Kind                   | Emitted by             | When                                                        | Required payload fields                  | Optional payload fields        |
+|------------------------|------------------------|-------------------------------------------------------------|------------------------------------------|-------------------------------|
+| `wave_start`           | executing-plans        | A new wave of story-executor subagents is about to be dispatched. | `wave_index` (int), `story_qids` (space-separated list) | —                             |
+| `wave_complete`        | executing-plans        | All story-executor subagents in a wave have returned.       | `wave_index` (int)                       | per-story result summary as `note` |
+| `integration_start`    | story-integrator       | The merge-and-validate sequence begins for a story.         | `story_qid`                              | —                             |
+| `integration_complete` | story-integrator       | The merge-and-validate sequence finishes for a story.       | `story_qid`, `result` (`ok`, `merge_failed`, or `validation_failed`) | —                             |
+| `validation_start`     | epic-validator         | Epic-level validation begins.                               | —                                        | `epic_qid` (via base field)   |
+| `validation_result`    | epic-validator         | Epic-level validation completes.                            | `result` (`pass` or `fail`)              | `summary` (short human-readable description on fail) |
+| `retry_decision`       | executing-plans        | The orchestrator decides to retry a failed story.           | `story_qid`, `attempt` (int), `reason`   | —                             |
+| `epic_finalize`        | executing-plans        | The finalize-branch step begins (merge-to-main or PR creation). | `epic_qid` (via base field)          | `merged_to`, `pr_url`         |
+
+#### Payload detail
+
+- **`wave_start`** — `wave_index` counts from 0. `story_qids` is a space-separated string of loom qualified IDs (e.g. `"superpowers:je66zjb:1 superpowers:je66zjb:2"`).
+- **`wave_complete`** — `wave_index` matches the corresponding `wave_start`. A brief `note` may summarise per-story outcomes (e.g. `"3 ok, 1 validation_failed"`).
+- **`integration_start` / `integration_complete`** — `story_qid` is the loom qualified ID of the story being integrated. `result` on `integration_complete` is one of: `ok`, `merge_failed`, `validation_failed`.
+- **`validation_start`** — the epic_qid is carried by the base field already; no extra payload needed.
+- **`validation_result`** — `result` is `pass` or `fail`. On fail, `summary` provides a short human-readable description of which criteria failed.
+- **`retry_decision`** — `attempt` is the 1-based retry number (first retry = `1`). `reason` is a one-line description of why the story failed (e.g. `"validation_failed: 2 criteria unmet"`).
+- **`epic_finalize`** — `merged_to` is the target branch (e.g. `main`). `pr_url` is included only when PR mode was used instead of merge+push.
 
 ---
 
