@@ -47,6 +47,8 @@ Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines)
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 ### Step 1: Compose body files
 
 In a temp directory (`mktemp -d`), write one markdown file per loom item to be created. Name them descriptively (e.g., `epic.md`, `story-1.md`, `task-1-1.md`).
@@ -56,24 +58,24 @@ In a temp directory (`mktemp -d`), write one markdown file per loom item to be c
 For **epic mode**:
 
 ```bash
-EPIC=$(loom epic create <project-qid> --title "<title>" --body-file <tmp>/epic.md -y)
+EPIC=$(loom epic create <project-qid> --title "<title>" --body-file <tmp>/epic.md)
 loom update "$EPIC" assignee "${CLAUDE_SESSION_ID}"
 
 for each story in the draft:
-  STORY=$(loom story create "$EPIC" --title "<story title>" --body-file <tmp>/story-N.md -y)
+  STORY=$(loom story create "$EPIC" --title "<story title>" --body-file <tmp>/story-N.md)
   loom update "$STORY" assignee "${CLAUDE_SESSION_ID}"
   for each task in the story:
-    loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N-M.md -y
+    loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N-M.md
 ```
 
 For **story mode**:
 
 ```bash
 # Story lives under <project>:backlog
-STORY=$(loom story create "<project>:backlog" --title "<title>" --body-file <tmp>/story.md -y)
+STORY=$(loom story create "<project>:backlog" --title "<title>" --body-file <tmp>/story.md)
 loom update "$STORY" assignee "${CLAUDE_SESSION_ID}"
 for each task in the draft:
-  loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N.md -y
+  loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N.md
 ```
 
 ### Step 3: Add dependencies

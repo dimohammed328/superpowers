@@ -106,6 +106,8 @@ injected by the SubagentStart hook — not templates for you to fill in.
 
 ## Workflow
 
+> Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
+
 ### Step 3 — Read the story body
 
 ```bash

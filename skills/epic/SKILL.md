@@ -11,7 +11,7 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 1. **Bind loom** to this repo:
    - Walk up from cwd for `.loom/state.json`. If found, note the bound project qid.
-   - If not found, run `loom project create <repo-basename> -y` (loom auto-discovers the `origin` remote). Fail if cwd is not in a git repo.
+   - If not found, run `loom -y project create <repo-basename>` (loom auto-discovers the `origin` remote). Fail if cwd is not in a git repo.
 
 2. **Hand off to `superpowers:brainstorming`** with context:
    - `mode=epic`
