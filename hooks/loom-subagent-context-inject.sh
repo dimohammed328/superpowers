@@ -10,6 +10,14 @@
 set -euo pipefail
 
 input=$(cat)
+
+# Debug logging: if LOOM_SUBAGENT_DEBUG_LOG is set, append raw payload to that file.
+# This is used to capture live SubagentStart payloads for field-name verification.
+# To enable: export LOOM_SUBAGENT_DEBUG_LOG=/tmp/loom-subagent-debug.jsonl
+if [[ -n "${LOOM_SUBAGENT_DEBUG_LOG:-}" ]]; then
+  printf '%s\n' "$input" >> "$LOOM_SUBAGENT_DEBUG_LOG"
+fi
+
 agent_type=$(jq -r '.agent_type // ""' <<<"$input")
 
 case "$agent_type" in
