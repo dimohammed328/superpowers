@@ -201,9 +201,9 @@ For `story_qid=...` entry:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
 
-## Tracking work in the orchestrator's own TodoList
+## Tracking work in the orchestrator's own Task List
 
-In your own (main session) TodoList, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
+In your own (main session) Task List, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
 
 ## Finalize branch
 

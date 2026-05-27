@@ -26,7 +26,7 @@ Borderline case? Ask the user one question with the two options and let them dec
 
 ## Mandatory checklist
 
-You MUST create a Claude TodoList task for each of these and complete in order:
+You MUST use TaskCreate to add a Task List item for each of these and complete in order:
 
 1. **Bind loom to this repo** — walk up from cwd looking for `.loom/state.json`. If absent, run `loom project create <repo-basename> -y` (loom auto-discovers the `origin` remote). Capture the project qid.
 2. **Dispatch the codebase-researcher agent** with the user's description and the repo root. Wait for its report (~under 400 words).
