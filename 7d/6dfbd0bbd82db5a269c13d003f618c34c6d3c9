@@ -1,0 +1,21 @@
+tests/skills/test_executing_epics_skill.sh
+  s_51e604aaad3428::t_4c3b88add3693d 1-85
+skills/executing-epics/SKILL.md
+  s_51e604aaad3428::t_d27b22f4b203e7 2-242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7d6dfbd0bbd82db5a269c13d003f618c34c6d3c9",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
