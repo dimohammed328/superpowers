@@ -1,0 +1,24 @@
+agents/story-integrator.md
+  s_ad8d417db4711f::t_150c7d6e1319e7 46,79,112
+skills/executing-plans/SKILL.md
+  s_ad8d417db4711f::t_20d05171af300e 38
+  s_ad8d417db4711f::t_c16698b629192a 42,96,125,153,224,262
+agents/epic-validator.md
+  s_ad8d417db4711f::t_386ff37891f8f5 29,44,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "16e7c560b1ae6cb44567a02f511a9ec58e951fdb",
+  "prompts": {},
+  "sessions": {
+    "s_ad8d417db4711f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b70eec95-ee6f-4511-a87c-59f64b154906",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
