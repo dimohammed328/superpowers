@@ -1,0 +1,23 @@
+skills/story/SKILL.md
+  s_51e604aaad3428::t_67032c227505e3 28,34
+  s_51e604aaad3428::t_acb0483aec0898 24,26
+skills/epic/SKILL.md
+  s_51e604aaad3428::t_8803ec33d75687 39-40
+  s_51e604aaad3428::t_104b7eef411496 24,26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "357e625187196919e5d71768a22eb4db7006a6cd",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
