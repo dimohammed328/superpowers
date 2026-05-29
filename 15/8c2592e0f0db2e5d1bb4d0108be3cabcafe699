@@ -1,0 +1,27 @@
+docs/windows/polyglot-hooks.md
+  s_ad8d417db4711f::t_2469a5ddb02ca2 169,180
+  s_ad8d417db4711f::t_e1e9fc236df7d3 56-60
+  s_ad8d417db4711f::t_3d089071e0880e 74
+  s_ad8d417db4711f::t_433589abf1b1aa 198
+  s_ad8d417db4711f::t_385e9c84bceb64 207
+  s_ad8d417db4711f::t_c4174a7586ce5f 25,30
+docs/orchestrator-log.md
+  s_ad8d417db4711f::t_8fd8589486378f 65
+  s_ad8d417db4711f::t_0a4d0c94c41e44 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "158c2592e0f0db2e5d1bb4d0108be3cabcafe699",
+  "prompts": {},
+  "sessions": {
+    "s_ad8d417db4711f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b70eec95-ee6f-4511-a87c-59f64b154906",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
