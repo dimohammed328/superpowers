@@ -1,0 +1,35 @@
+tests/hooks/test_subagent_no_template_text.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 12
+tests/hooks/test_task_inprogress_sync.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 3
+tests/hooks/test_task_created_guard.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 7
+tests/hooks/test_subagent_context_inject.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 6
+tests/hooks/test_loom_log_dispatch.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 2,15
+tests/hooks/test_loom_log_event_helper.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 2,14
+tests/hooks/test_task_completed_sync.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 3
+tests/hooks/test_subagent_schema_comment.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 2,10
+tests/hooks/test_loom_log_semantic.sh
+  s_ad8d417db4711f::t_7fe290e329e7e0 5,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "34c8933e48545a50f9951cd530bc9e2e57bc1598",
+  "prompts": {},
+  "sessions": {
+    "s_ad8d417db4711f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b70eec95-ee6f-4511-a87c-59f64b154906",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
