@@ -1,0 +1,35 @@
+.codex-plugin/plugin.json
+  s_51e604aaad3428::t_9dfc44557f2dc8 4
+  s_51e604aaad3428::t_64f99c087fc6fd 24-25
+skills/using-superpowers/SKILL.md
+  s_51e604aaad3428::t_57dcd25ac6a58e 99
+  s_51e604aaad3428::t_240879cf92f79b 26
+skills/systematic-debugging/SKILL.md
+  s_51e604aaad3428::t_8a1f651d285a29 179
+gemini-extension.json
+  s_51e604aaad3428::t_f9bbd403ba6b36 3
+.cursor-plugin/plugin.json
+  s_51e604aaad3428::t_8cba279614ede7 4
+.claude-plugin/marketplace.json
+  s_51e604aaad3428::t_8ccc60242f0118 11
+.claude-plugin/plugin.json
+  s_51e604aaad3428::t_d3ab61a24ebd97 3
+skills/verification-before-completion/SKILL.md
+  s_51e604aaad3428::t_5c93cb58730261 84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d8a9316d00de2760b385cc5aaff7e4e0967f4328",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
