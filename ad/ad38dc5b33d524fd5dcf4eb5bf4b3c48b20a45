@@ -1,0 +1,29 @@
+agents/planner.md
+  s_51e604aaad3428::t_243055bd611388 1-136
+README.md
+  s_51e604aaad3428::t_243055bd611388 168,197
+skills/epic/SKILL.md
+  s_51e604aaad3428::t_243055bd611388 24,39
+skills/executing-epics/SKILL.md
+  s_51e604aaad3428::t_243055bd611388 3,23
+skills/story/SKILL.md
+  s_51e604aaad3428::t_243055bd611388 24
+skills/brainstorming/SKILL.md
+  s_51e604aaad3428::t_243055bd611388 3,8,37,70,76,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "adad38dc5b33d524fd5dcf4eb5bf4b3c48b20a45",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
