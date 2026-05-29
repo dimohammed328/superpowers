@@ -1,0 +1,27 @@
+agents/story-integrator.md
+  s_51e604aaad3428::t_9d9352a68f820b 19-21
+skills/brainstorming/SKILL.md
+  s_51e604aaad3428::t_74ebe81bd6c2e2 76
+  s_51e604aaad3428::t_40e8d03c63924c 37
+skills/systematic-debugging/CREATION-LOG.md
+  s_51e604aaad3428::t_93631de7d9fe20 96
+  s_51e604aaad3428::t_cf29750501d4b2 84-85
+agents/writing-plans.md
+  s_51e604aaad3428::t_286902b004eb9e 122-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "10592c410a5a548c4ed6adf93263ba2ae18efdd4",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
