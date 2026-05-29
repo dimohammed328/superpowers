@@ -43,7 +43,7 @@ across calls. Prefix every git command in the merge sequence with
 `cd <epic_worktree> &&` (or use `git -C <epic_worktree>`).
 
 ```bash
-cd <epic_worktree> && hooks/lib/loom-log-event.sh \
+cd <epic_worktree> && "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
   --kind integration_start \
   --epic-qid "$epic_qid" \
   --agent-id "$AGENT_ID" \
@@ -76,7 +76,7 @@ Whether you just merged or are running on the story branch directly:
 - **All criteria pass AND tests/lint/format are green:**
   1. Emit `integration_complete` with `result=ok`:
      ```bash
-     hooks/lib/loom-log-event.sh \
+     "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
        --kind integration_complete \
        --epic-qid "$epic_qid" \
        --agent-id "$AGENT_ID" \
@@ -109,7 +109,7 @@ Whether you just merged or are running on the story branch directly:
   - If you just performed a merge: `cd <epic_worktree> && git revert -m 1 HEAD --no-edit` to undo it.
   - Emit `integration_complete` with the actual result before returning:
     ```bash
-    cd <epic_worktree> && hooks/lib/loom-log-event.sh \
+    cd <epic_worktree> && "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
       --kind integration_complete \
       --epic-qid "$epic_qid" \
       --agent-id "$AGENT_ID" \

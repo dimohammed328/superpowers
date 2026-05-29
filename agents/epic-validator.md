@@ -26,7 +26,7 @@ The dispatching prompt contains:
 2. `loom show <epic_qid> --json | jq -r .body` — read the epic body. Extract the `## Validation Criteria` section.
 3. Emit `validation_start` to mark the entry point of the validation run:
    ```bash
-   hooks/lib/loom-log-event.sh \
+   "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
      --kind validation_start \
      --epic-qid "$epic_qid" \
      --agent-id "$AGENT_ID" \
@@ -41,7 +41,7 @@ The dispatching prompt contains:
 6. Emit `validation_result` with the outcome. On failure, include a `summary` so the orchestrator and audit trail have a human-readable description of what failed:
    ```bash
    # On pass:
-   hooks/lib/loom-log-event.sh \
+   "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
      --kind validation_result \
      --epic-qid "$epic_qid" \
      --agent-id "$AGENT_ID" \
@@ -50,7 +50,7 @@ The dispatching prompt contains:
      --field "result=pass"
 
    # On fail:
-   hooks/lib/loom-log-event.sh \
+   "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
      --kind validation_result \
      --epic-qid "$epic_qid" \
      --agent-id "$AGENT_ID" \
