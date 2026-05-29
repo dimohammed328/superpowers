@@ -1,0 +1,42 @@
+skills/writing-plans/SKILL.md
+  s_065252a4d8af90::t_54a75ffc9309d2 100,102-103,105-109
+  s_065252a4d8af90::t_8af0c06ccc6e46 1-2,4-99,101,104,110-120
+  s_065252a4d8af90::t_b2e1d6e4c3ec3a 3
+skills/writing-plans/plan-document-reviewer-prompt.md
+  s_065252a4d8af90::t_8af0c06ccc6e46 1-49
+skills/story/SKILL.md
+  s_065252a4d8af90::t_65c4e6dcdcc07c 24
+agents/story-integrator.md
+  s_065252a4d8af90::t_f97c65695c59de 163
+README.md
+  s_065252a4d8af90::t_de6711e8283919 168
+  s_065252a4d8af90::t_d35899eeba5ec2 186
+skills/executing-epics/SKILL.md
+  s_065252a4d8af90::t_3fa6a699d6a7a2 3
+  s_065252a4d8af90::t_f30e3842d8c648 23
+skills/brainstorming/SKILL.md
+  s_065252a4d8af90::t_9b20f1d89aef52 70
+  s_065252a4d8af90::t_24187c9abc89ac 76,78
+  s_065252a4d8af90::t_ab129b743ca5a3 3
+  s_065252a4d8af90::t_d8b4c82a3a4c44 37
+  s_065252a4d8af90::t_c489485c6b3833 8
+skills/epic/SKILL.md
+  s_065252a4d8af90::t_f5c785a3f03bed 24
+  s_065252a4d8af90::t_61693836b93239 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0003e9cee2a3b52c18474a819583a1af9d286edc",
+  "prompts": {},
+  "sessions": {
+    "s_065252a4d8af90": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91603955-6d0b-4c5d-a11f-266e8a1a79fd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
