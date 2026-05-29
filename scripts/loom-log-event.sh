@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# hooks/lib/loom-log-event.sh — append one JSONL event line to the orchestrator log.
+# scripts/loom-log-event.sh — append one JSONL event line to the orchestrator log.
 #
 # Usage:
 #   loom-log-event.sh \
