@@ -1,0 +1,24 @@
+agents/story-executor.md
+  s_51e604aaad3428::t_4306dfba2e2cf2 224
+  s_51e604aaad3428::t_50e9f38c491a50 42
+  s_51e604aaad3428::t_71cb20d0d47f73 3
+  s_51e604aaad3428::t_aca4dddce94a34 211
+  s_51e604aaad3428::t_c4154302c43c80 141
+  s_51e604aaad3428::t_de97dfb9ec06ae 161-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a33a5a84a4417424fb782588d2ec4bff37da2ad0",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
