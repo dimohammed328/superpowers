@@ -1,0 +1,26 @@
+skills/executing-epics/SKILL.md
+  s_51e604aaad3428::t_bfcbb9849c7944 2-6
+  s_51e604aaad3428::t_0d2cf243f46936 19-23
+agents/story-integrator.md
+  s_51e604aaad3428::t_076db741c8ac7a 128
+  s_51e604aaad3428::t_9fe8e2093fed0f 99-103
+  s_51e604aaad3428::t_14309aff9c5442 114,130
+  s_51e604aaad3428::t_27bae732a7f80f 156
+  s_51e604aaad3428::t_ac02c13c6c176d 13-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b25ac50ffd1bae5990436377a1c7da2f66015cdd",
+  "prompts": {},
+  "sessions": {
+    "s_51e604aaad3428": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf41d3fa-cab5-4e63-8638-55b1085bd646",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
