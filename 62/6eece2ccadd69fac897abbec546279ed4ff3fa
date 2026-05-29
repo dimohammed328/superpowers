@@ -1,0 +1,23 @@
+hooks/hooks-cursor.json
+  s_ad8d417db4711f::t_3b4f61b160ec18 6
+hooks/hooks.json
+  s_ad8d417db4711f::t_6af31c6b592539 9
+.claude-plugin/plugin.json
+  s_ad8d417db4711f::t_c1f9349c2fd773 25,33,43,53,61,71,79,90,99,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "626eece2ccadd69fac897abbec546279ed4ff3fa",
+  "prompts": {},
+  "sessions": {
+    "s_ad8d417db4711f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b70eec95-ee6f-4511-a87c-59f64b154906",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
