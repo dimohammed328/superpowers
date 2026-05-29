@@ -1,0 +1,22 @@
+scripts/loom-log-event.sh
+  s_ad8d417db4711f::t_e536935704fa00 2
+scripts/loom-log.sh
+  s_ad8d417db4711f::t_1b752ed2ad0630 20
+  s_ad8d417db4711f::t_aa55935af0d1cd 2,10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4435cb82405e68cc3e5e0d500377bc6b8fd0e996",
+  "prompts": {},
+  "sessions": {
+    "s_ad8d417db4711f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b70eec95-ee6f-4511-a87c-59f64b154906",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
