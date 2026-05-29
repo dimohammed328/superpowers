@@ -9,7 +9,7 @@
 
 set -euo pipefail
 
-HOOK="$(dirname "$0")/../../hooks/loom-subagent-context-inject.sh"
+HOOK="$(dirname "$0")/../../scripts/loom-subagent-context-inject.sh"
 
 payload='{"agent_type": "story-executor", "session_id": "sess-real-123", "agent_id": "agent-real-456"}'
 out=$(echo "$payload" | "$HOOK")

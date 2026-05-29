@@ -2,7 +2,7 @@
 # tests/hooks/test_loom_log_semantic.sh
 #
 # Tests for semantic event kinds defined in docs/orchestrator-log.md.
-# Invokes hooks/lib/loom-log-event.sh directly with each semantic kind under
+# Invokes scripts/loom-log-event.sh directly with each semantic kind under
 # a temp XDG_STATE_HOME and stub .loom/state.json. Asserts each event lands
 # in the expected per-agent file as well-formed JSON carrying the documented
 # payload fields.
@@ -10,7 +10,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HELPER="${SCRIPT_DIR}/../../hooks/lib/loom-log-event.sh"
+HELPER="${SCRIPT_DIR}/../../scripts/loom-log-event.sh"
 
 PASS=0
 FAIL=0

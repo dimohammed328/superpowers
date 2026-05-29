@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Unit tests for hooks/loom-log.sh (dispatcher hook)
+# Unit tests for scripts/loom-log.sh (dispatcher hook)
 #
 # Validates:
 #   1. Directory creation at XDG_STATE_HOME/loom/<project>/<epic_qid>/
@@ -12,7 +12,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISPATCHER="${SCRIPT_DIR}/../../hooks/loom-log.sh"
+DISPATCHER="${SCRIPT_DIR}/../../scripts/loom-log.sh"
 
 PASS=0
 FAIL=0
