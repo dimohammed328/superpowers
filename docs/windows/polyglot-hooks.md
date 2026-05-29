@@ -22,12 +22,12 @@ A polyglot script is valid syntax in multiple languages simultaneously. Our wrap
 ```cmd
 : << 'CMDBLOCK'
 @echo off
-"C:\Program Files\Git\bin\bash.exe" -l -c "\"$(cygpath -u \"$CLAUDE_PLUGIN_ROOT\")/hooks/session-start.sh\""
+"C:\Program Files\Git\bin\bash.exe" -l -c "\"$(cygpath -u \"$CLAUDE_PLUGIN_ROOT\")/scripts/run-hook.cmd\" session-start"
 exit /b
 CMDBLOCK
 
 # Unix shell runs from here
-"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
+"${CLAUDE_PLUGIN_ROOT}/scripts/run-hook.cmd" session-start
 ```
 
 ### How It Works
@@ -53,9 +53,11 @@ CMDBLOCK
 
 ```
 hooks/
-├── hooks.json           # Points to the .cmd wrapper
-├── session-start.cmd    # Polyglot wrapper (cross-platform entry point)
-└── session-start.sh     # Actual hook logic (bash script)
+└── hooks.json           # Points to the wrapper in scripts/
+
+scripts/
+├── run-hook.cmd         # Polyglot wrapper (cross-platform entry point)
+└── session-start        # Actual hook logic (bash script, no extension)
 ```
 
 ### hooks.json
@@ -69,7 +71,7 @@ hooks/
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.cmd\""
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/run-hook.cmd\" session-start"
           }
         ]
       }
@@ -164,7 +166,7 @@ shift
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/run-hook.cmd\" session-start.sh"
           }
         ]
       }
@@ -175,7 +177,7 @@ shift
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" validate-bash.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/run-hook.cmd\" validate-bash.sh"
           }
         ]
       }
@@ -193,7 +195,7 @@ CMD can't find bash. The wrapper uses the full path `C:\Program Files\Git\bin\ba
 Bash isn't running as a login shell. Ensure `-l` flag is used.
 
 ### Path has weird `\/` in it
-`${CLAUDE_PLUGIN_ROOT}` expanded to a Windows path ending with backslash, then `/hooks/...` was appended. Use `cygpath` to convert the entire path.
+`${CLAUDE_PLUGIN_ROOT}` expanded to a Windows path ending with backslash, then `/scripts/...` was appended. Use `cygpath` to convert the entire path.
 
 ### Script opens in text editor instead of running
 The hooks.json is pointing directly to the `.sh` file. Point to the `.cmd` wrapper instead.
@@ -202,7 +204,7 @@ The hooks.json is pointing directly to the `.sh` file. Point to the `.cmd` wrapp
 Claude Code may run hooks differently. Test by simulating the hook environment:
 ```powershell
 $env:CLAUDE_PLUGIN_ROOT = "C:\path\to\plugin"
-cmd /c "C:\path\to\plugin\hooks\session-start.cmd"
+cmd /c "C:\path\to\plugin\scripts\run-hook.cmd" session-start
 ```
 
 ## Related Issues
