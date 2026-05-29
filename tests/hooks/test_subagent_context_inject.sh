@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-HOOK="$(dirname "$0")/../../hooks/loom-subagent-context-inject.sh"
+HOOK="$(dirname "$0")/../../scripts/loom-subagent-context-inject.sh"
 
 # Case 1: matching agent_type returns hookSpecificOutput.additionalContext
 out=$(echo '{"agent_type": "story-executor", "session_id": "S1", "agent_id": "A1"}' | "$HOOK")

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Unit tests for hooks/lib/loom-log-event.sh
+# Unit tests for scripts/loom-log-event.sh
 #
 # Each test case uses a temp XDG_STATE_HOME and a temp .loom/state.json
 # to control `project` derivation. Tests verify:
@@ -11,7 +11,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HELPER="${SCRIPT_DIR}/../../hooks/lib/loom-log-event.sh"
+HELPER="${SCRIPT_DIR}/../../scripts/loom-log-event.sh"
 
 PASS=0
 FAIL=0

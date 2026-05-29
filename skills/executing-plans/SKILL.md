@@ -35,11 +35,11 @@ This file is gitignored by loom's `.loom/.gitignore`.
 
 ## Semantic event logging
 
-The orchestrator emits semantic events via `hooks/lib/loom-log-event.sh` at key decision points — moments the mechanical hooks (SubagentStart, TaskUpdate, etc.) cannot observe. These are wave composition, retry rationale, validation outcome interpretation, and the finalize decision. Mechanical events (agent lifecycle, task transitions, commits) are handled automatically; do not re-emit them.
+The orchestrator emits semantic events via `"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh"` at key decision points — moments the mechanical hooks (SubagentStart, TaskUpdate, etc.) cannot observe. These are wave composition, retry rationale, validation outcome interpretation, and the finalize decision. Mechanical events (agent lifecycle, task transitions, commits) are handled automatically; do not re-emit them.
 
 Base invocation pattern:
 ```bash
-hooks/lib/loom-log-event.sh \
+"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
   --kind <semantic_kind> \
   --epic-qid <epic_qid> \
   --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
@@ -93,7 +93,7 @@ loop:
     # Wave N: dispatch story-executor subagents in PARALLEL
     # Log wave composition before dispatch — the orchestrator knows which stories
     # are in the wave; mechanical hooks only see individual subagent starts.
-    hooks/lib/loom-log-event.sh \
+    "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
       --kind wave_start \
       --epic-qid <epic_qid> \
       --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
@@ -122,7 +122,7 @@ loop:
     # Store per-sqid: executor_branch[sqid], executor_worktree[sqid].
 
     # Log wave completion with a brief outcome summary.
-    hooks/lib/loom-log-event.sh \
+    "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
       --kind wave_complete \
       --epic-qid <epic_qid> \
       --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
@@ -150,7 +150,7 @@ loop:
             if retry_counter[sqid] >= 3:
                 HALT with diagnostic — surface result.reason / failed_criteria to the user
             # Log the retry decision so the audit trail captures the rationale.
-            hooks/lib/loom-log-event.sh \
+            "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
               --kind retry_decision \
               --epic-qid <epic_qid> \
               --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
@@ -221,7 +221,7 @@ On final validation success, this skill itself terminates the flow by integratin
 
 Before merging, emit an `epic_finalize` event so the log captures the finalize decision:
 ```bash
-hooks/lib/loom-log-event.sh \
+"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
   --kind epic_finalize \
   --epic-qid <epic_qid> \
   --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
@@ -259,7 +259,7 @@ pr_url=$(gh pr create --base <parent> --head <branch> \
   --title "<epic or story title>" \
   --body "<summary derived from the loom item body>")
 
-hooks/lib/loom-log-event.sh \
+"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
   --kind epic_finalize \
   --epic-qid <epic_qid> \
   --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \

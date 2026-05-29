@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-subagent-context-inject.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-subagent-context-inject.sh"
           }
         ]
       },
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }
@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-created-guard.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-created-guard.sh"
           }
         ]
       },
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-completed-sync.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-completed-sync.sh"
           }
         ]
       },
@@ -76,7 +76,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }
@@ -87,7 +87,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-task-inprogress-sync.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-inprogress-sync.sh"
           }
         ]
       },
@@ -96,7 +96,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       },
@@ -105,7 +105,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/loom-log.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }

@@ -1,6 +1,6 @@
 # Orchestrator Log
 
-The orchestrator log is a per-agent, append-only JSONL file that records the lifecycle of every subagent spawned during an epic execution. It is written by `hooks/lib/loom-log-event.sh` and is designed for post-hoc reconstruction of what happened across the full orchestration run.
+The orchestrator log is a per-agent, append-only JSONL file that records the lifecycle of every subagent spawned during an epic execution. It is written by `scripts/loom-log-event.sh` and is designed for post-hoc reconstruction of what happened across the full orchestration run.
 
 ---
 
@@ -62,7 +62,7 @@ The `--field key=value` flag on `loom-log-event.sh` appends arbitrary fields to 
 
 ## Mechanical Event-Kind Catalogue
 
-Mechanical kinds are emitted by `hooks/loom-log.sh` (the dispatcher wired in Story 2). The dispatcher branches by hook event type and calls `loom-log-event.sh` at each lifecycle boundary.
+Mechanical kinds are emitted by `scripts/loom-log.sh` (the dispatcher wired in Story 2). The dispatcher branches by hook event type and calls `loom-log-event.sh` at each lifecycle boundary.
 
 | Kind                | Emitted by                            | When                                                      | Payload fields                       |
 |---------------------|---------------------------------------|-----------------------------------------------------------|--------------------------------------|

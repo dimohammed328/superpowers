@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# hooks/loom-log.sh — dispatcher hook for orchestrator event logging.
+# scripts/loom-log.sh — dispatcher hook for orchestrator event logging.
 #
 # Wired to: TaskCreated, PostToolUse (matchers: TaskUpdate, Bash),
 #           TaskCompleted, SubagentStart, SubagentStop,
@@ -7,7 +7,7 @@
 #
 # Reads stdin JSON, detects event type from $CLAUDE_HOOK_EVENT env var
 # (or infers from JSON shape if unset), extracts relevant fields, and
-# calls hooks/lib/loom-log-event.sh with the appropriate --kind and
+# calls scripts/loom-log-event.sh with the appropriate --kind and
 # --field arguments.
 #
 # FAIL-OPEN: any error → stderr diagnostic → exit 0.
@@ -17,7 +17,7 @@
 # Each helper function can use local set -e but the top-level trap handles all.
 
 HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HELPER="${HOOK_DIR}/lib/loom-log-event.sh"
+HELPER="${HOOK_DIR}/loom-log-event.sh"
 
 # ---------------------------------------------------------------------------
 # Fail-open error trap

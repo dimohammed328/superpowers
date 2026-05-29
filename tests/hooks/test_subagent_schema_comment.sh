@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Test: hooks/loom-subagent-context-inject.sh has schema comment, no debug logging block.
+# Test: scripts/loom-subagent-context-inject.sh has schema comment, no debug logging block.
 #
 # Verifies that after diagnosis is complete:
 # 1. The debug logging block (LOOM_SUBAGENT_DEBUG_LOG) is removed from the hook.
@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-HOOK="$(dirname "$0")/../../hooks/loom-subagent-context-inject.sh"
+HOOK="$(dirname "$0")/../../scripts/loom-subagent-context-inject.sh"
 
 if [[ ! -f "$HOOK" ]]; then
   echo "FAIL: hook not found at $HOOK"

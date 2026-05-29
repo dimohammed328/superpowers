@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-HOOK="$(cd "$(dirname "$0")/../../hooks" && pwd)/loom-task-completed-sync.sh"
+HOOK="$(cd "$(dirname "$0")/../../scripts" && pwd)/loom-task-completed-sync.sh"
 
 export LOOM_DIR=$(mktemp -d)
 trap 'rm -rf "$LOOM_DIR"' EXIT

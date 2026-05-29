@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-HOOK="$(cd "$(dirname "$0")/../../hooks" && pwd)/loom-task-created-guard.sh"
+HOOK="$(cd "$(dirname "$0")/../../scripts" && pwd)/loom-task-created-guard.sh"
 
 # Prepare a temp LOOM_DIR with a ready task. cd into it so the per-project
 # `.loom/` workspace state lands inside the temp dir (cleaned by the trap),
