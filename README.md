@@ -24,7 +24,7 @@ There's a bunch more to it, but that's the core of the system. And because the s
 Two slash commands drive a project-management-aware planning loop:
 
 - **`/epic <description>`** — large features, multi-subsystem refactors. Grooms a loom epic with child stories and tasks, dispatches parallel story-executor subagents in their own worktrees off an epic branch, runs per-story merge + validation, and final epic-level verification via the `verify` skill.
-- **`/story <description>`** — small, scoped changes. Grooms a loom story under the project's `backlog` epic, runs one story-executor over its tasks, validates, and finalizes the branch (merge into `main` and push, or open a PR if your `/story` request explicitly asked for one).
+- **`/story <description>`** — small, scoped changes. Grooms a loom story under the project's `backlog` epic, runs one story-executor over its tasks, validates, and finalizes the branch (opens a PR by default; merges into `main` and pushes only when explicitly asked).
 
 Both commands auto-create a loom workspace (`.loom/`) in the current repo on first use. See `docs/plans/2026-05-22-loom-backed-planning-design.md` for the full design and the related agent definitions in `agents/`.
 
