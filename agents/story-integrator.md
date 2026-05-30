@@ -127,7 +127,7 @@ Whether you just merged or are running on the story branch directly:
 ## What you must NOT do
 
 - **Do NOT call `loom complete` or `loom reopen`.** The orchestrator handles status transitions based on your return value.
-- **Do NOT push, force-push, or create PRs.** Final integration (push or PR) happens in the `executing-plans` Finalize step after the epic-level validator passes.
+- **Do NOT push, force-push, or create PRs.** This agent performs epic-internal story→epic-branch merges only. These are always plain `--no-ff` merges — never PRs. PR creation (the default final integration) and push happen only in the `executing-plans` Finalize step after the epic-level validator passes.
 - **Do NOT modify the story's source files** to make criteria pass. If they don't pass on first observation, that's a `validation_failed`.
 - **Do NOT skip the tests/lint/format runs** even if criteria all observably pass.
 

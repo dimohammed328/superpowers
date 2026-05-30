@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR)."
+description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it)."
 ---
 
 # Executing Plans — loom-backed orchestrator
@@ -172,7 +172,7 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
    ```
 2. If `result.result == "ok"`:
    - `loom complete <epic-qid>`
-   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
+   - Proceed to the **Finalize branch** section below to open a PR (or merge+push if explicitly requested).
 3. Else: HALT with the validator's diagnostic. Do not auto-retry at the epic level — that's a human decision.
 
 ## Story (single-item) shape
@@ -200,7 +200,7 @@ For `story_qid=...` entry:
    ```
 3. If `result.ok`:
    - `loom complete <sqid>`
-   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
+   - Proceed to the **Finalize branch** section below to open a PR (or merge+push if explicitly requested).
 4. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
@@ -214,10 +214,36 @@ In your own (main session) Task List, use subjects formatted as `[<sqid>] <story
 On final validation success, this skill itself terminates the flow by integrating the validated branch into its parent. There is no further handoff.
 
 **What "the branch" means here:**
-- For epic flow: the epic branch `loom/<epic-qid>` is merged into `main`.
-- For story flow (`/story`): the story branch `loom/<sqid>` is merged into `main`.
+- For epic flow: the epic branch `loom/<epic-qid>` is integrated into `main` (via PR or merge).
+- For story flow (`/story`): the story branch `loom/<sqid>` is integrated into `main` (via PR or merge).
 
-**Default behavior (merge + push):**
+In the default PR path, the branch and worktree are left in place for the user to land. In the merge + push path, cleanup (branch delete + worktree remove) happens after a successful push.
+
+**Default behavior (open a PR):**
+
+Push the branch and open a PR. Emit `epic_finalize` with a `pr_url` once the PR is created:
+
+```bash
+git push -u origin <branch>
+pr_url=$(gh pr create --base <parent> --head <branch> \
+  --title "<epic or story title>" \
+  --body "<summary derived from the loom item body>")
+
+"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
+  --kind epic_finalize \
+  --epic-qid <epic_qid> \
+  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-executor" \
+  --field "merged_to=<parent>" \
+  --field "pr_url=${pr_url}"
+```
+
+Leave the branch and worktree in place; the user will land the PR.
+
+**Merge + push (only when explicitly requested):**
+
+If the original `/epic` or `/story` request contains explicit merge-to-main wording (e.g. "merge to main", "push to main", "no PR"), merge locally and push instead of opening a PR.
 
 Before merging, emit an `epic_finalize` event so the log captures the finalize decision:
 ```bash
@@ -249,29 +275,7 @@ git branch -d <branch>
 git worktree remove <worktree-path>   # if a worktree existed for this branch
 ```
 
-**PR mode (only when the user explicitly asked):**
-
-If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, emit `epic_finalize` with a `pr_url` once the PR is created, then push the branch and open a PR:
-
-```bash
-git push -u origin <branch>
-pr_url=$(gh pr create --base <parent> --head <branch> \
-  --title "<epic or story title>" \
-  --body "<summary derived from the loom item body>")
-
-"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
-  --kind epic_finalize \
-  --epic-qid <epic_qid> \
-  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
-  --session-id "$CLAUDE_SESSION_ID" \
-  --agent-type "story-executor" \
-  --field "merged_to=<parent>" \
-  --field "pr_url=${pr_url}"
-```
-
-Leave the branch and worktree in place; the user will land the PR.
-
-**How to tell which mode applies.** Look at the original user request that triggered `/epic` or `/story`. If it contains the literal words "PR" or "pull request", use PR mode. Otherwise use the default merge + push. If genuinely ambiguous, ask once before acting.
+**How to tell which mode applies.** PR creation is the default. Use merge + push only when the original `/epic` or `/story` request contains explicit merge-to-main wording (e.g. "merge to main", "push to main", "no PR"). If genuinely ambiguous, ask once before acting.
 
 **Validation failure path is unchanged:** if the final validator returned a failure, halt and surface the diagnostic — do not attempt to finalize.
 
@@ -308,7 +312,7 @@ violates the isolation guarantees of the worktree-per-executor model.
 
 ## Constraints
 
-- **Never call `git push` or open PRs before final validation passes.** Pushing / PR-opening happens only in the Finalize branch section, after the final validator returns `ok`.
+- **Never open a PR or push before final validation passes.** PR-opening / pushing happens only in the Finalize branch section, after the final validator returns `ok`.
 - **Never call `loom complete` on a story before the integrator returns `ok`.**
 - **Never auto-retry at the epic level.** Halt and surface.
 - **Bounded retries**: 3 per story across waves.

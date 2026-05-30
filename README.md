@@ -24,7 +24,7 @@ There's a bunch more to it, but that's the core of the system. And because the s
 Two slash commands drive a project-management-aware planning loop:
 
 - **`/epic <description>`** — large features, multi-subsystem refactors. Grooms a loom epic with child stories and tasks, dispatches parallel story-executor subagents in their own worktrees off an epic branch, runs per-story merge + validation, and final epic-level verification via the `verify` skill.
-- **`/story <description>`** — small, scoped changes. Grooms a loom story under the project's `backlog` epic, runs one story-executor over its tasks, validates, and finalizes the branch (merge into `main` and push, or open a PR if your `/story` request explicitly asked for one).
+- **`/story <description>`** — small, scoped changes. Grooms a loom story under the project's `backlog` epic, runs one story-executor over its tasks, validates, and finalizes the branch (opens a PR by default; merges into `main` and pushes only when explicitly asked).
 
 Both commands auto-create a loom workspace (`.loom/`) in the current repo on first use. See `docs/plans/2026-05-22-loom-backed-planning-design.md` for the full design and the related agent definitions in `agents/`.
 
@@ -167,7 +167,7 @@ already use it in another harness.
 
 2. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
 
-3. **executing-plans** - Activates with plan. Orchestrates execution: parallel story-executor dispatch for epics, or single-executor for stories, with merge and validation between waves. On final validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR). Worktree creation for the epic and each story is handled inline by the orchestrator and story-executor.
+3. **executing-plans** - Activates with plan. Orchestrates execution: parallel story-executor dispatch for epics, or single-executor for stories, with merge and validation between waves. On final validation success, finalizes the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it). Worktree creation for the epic and each story is handled inline by the orchestrator and story-executor.
 
 4. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 

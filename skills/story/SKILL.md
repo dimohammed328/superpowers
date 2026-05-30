@@ -1,6 +1,6 @@
 ---
 name: story
-description: "Use when the user types /story followed by a description of a small, scoped change — a bugfix, single-file refactor, or self-contained feature. Drives the loom-backed flow at story scale: research → groom → plan as a loom story (with tasks) under the project's backlog epic → execute via a single story-executor subagent → validate → finalize the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR)."
+description: "Use when the user types /story followed by a description of a small, scoped change — a bugfix, single-file refactor, or self-contained feature. Drives the loom-backed flow at story scale: research → groom → plan as a loom story (with tasks) under the project's backlog epic → execute via a single story-executor subagent → validate → finalize the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it)."
 ---
 
 # /story — Small-change workflow
@@ -23,7 +23,7 @@ The user has invoked `/story <description>`. The description is in `$ARGUMENTS`.
 
 5. **Hand off to `superpowers:writing-plans`** with the groomed draft. That skill creates the story under backlog and its tasks; sets `assignee: ${CLAUDE_SESSION_ID}` on the story.
 
-6. **Hand off to `superpowers:executing-plans`** with `story_qid=<qid>`. The orchestrator creates the story worktree off main, dispatches one story-executor, then one story-integrator (validation only, on the story branch directly). On validation success, `executing-plans` finalizes the branch in-skill — by default merging into `main` and pushing; if the original `/story` request explicitly named a PR, it pushes the branch and opens one via `gh pr create` instead.
+6. **Hand off to `superpowers:executing-plans`** with `story_qid=<qid>`. The orchestrator creates the story worktree off main, dispatches one story-executor, then one story-integrator (validation only, on the story branch directly). On validation success, `executing-plans` finalizes the branch in-skill — by default pushing the branch and opening a PR via `gh pr create`; if the original `/story` request explicitly asked to merge to main (e.g. "merge to main", "push to main", "no PR"), it merges into `main` and pushes instead.
 
 7. On validation pass, you're done. On validation fail after 3 retries, the orchestrator halts and surfaces the diagnostic.
 
@@ -31,7 +31,7 @@ The user has invoked `/story <description>`. The description is in `$ARGUMENTS`.
 
 - One story, not many. No parallel fanout.
 - No epic worktree. Story worktree branches directly off `main`.
-- Validation runs directly on the story branch (no per-story integrator merge into an epic branch). Final integration is done by the `executing-plans` Finalize step itself: merge into `main` and push by default, or `gh pr create` if the user explicitly asked for a PR.
+- Validation runs directly on the story branch (no per-story integrator merge into an epic branch). Final integration is done by the `executing-plans` Finalize step itself: open a PR via `gh pr create` by default, or merge into `main` and push if the user explicitly asked for it.
 - Lives under the `backlog` epic, not a freshly-created epic.
 
 ## Constraints

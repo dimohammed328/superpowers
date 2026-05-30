@@ -1,6 +1,6 @@
 ---
 name: epic
-description: "Use when the user types /epic followed by a description of a large feature, refactor, or end-to-end change. Drives the full loom-backed planning and parallel execution workflow: research → groom → plan as a loom epic with child stories and tasks → execute via parallel story-subagents with merge and validation orchestration → final epic-level verify."
+description: "Use when the user types /epic followed by a description of a large feature, refactor, or end-to-end change. Drives the full loom-backed planning and parallel execution workflow: research → groom → plan as a loom epic with child stories and tasks → execute via parallel story-subagents with merge and validation orchestration → final epic-level verify → finalize the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it)."
 ---
 
 # /epic — Large-feature workflow
@@ -25,7 +25,7 @@ The user has invoked `/epic <description>`. The description is in `$ARGUMENTS`. 
 
 5. **Hand off to `superpowers:executing-plans`** with `epic_qid=<qid>`. The orchestrator creates the epic worktree, runs the wave loop, and runs final epic validation.
 
-6. On final validation pass, the orchestrator finalizes the epic branch (merge into `main` + push, or `gh pr create` if the original `/epic` request explicitly named a PR). On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
+6. On final validation pass, the orchestrator finalizes the epic branch (opens a PR via `gh pr create` by default; merges into `main` and pushes only if the original `/epic` request explicitly asked for it). On failure, the orchestrator halts and surfaces the diagnostic — that ends your turn.
 
 ## Constraints
 
