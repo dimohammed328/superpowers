@@ -1,0 +1,21 @@
+docs/plans/2026-05-22-loom-superpowers-integration.md
+  s_96a4bba5fdb3b0::t_98dd8263f6d98c 3-4
+docs/plans/2026-05-22-loom-backed-planning-design.md
+  s_96a4bba5fdb3b0::t_eabb8934eb2bbc 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "dec09a35d6cddccbd8d999c612c2f6fb00147256",
+  "prompts": {},
+  "sessions": {
+    "s_96a4bba5fdb3b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a7667053-30fd-47e0-a018-ae205b857219",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
