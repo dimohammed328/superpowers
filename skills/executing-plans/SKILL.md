@@ -312,7 +312,7 @@ violates the isolation guarantees of the worktree-per-executor model.
 
 ## Constraints
 
-- **Never call `git push` or open PRs before final validation passes.** Pushing / PR-opening happens only in the Finalize branch section, after the final validator returns `ok`.
+- **Never open a PR or push before final validation passes.** PR-opening / pushing happens only in the Finalize branch section, after the final validator returns `ok`.
 - **Never call `loom complete` on a story before the integrator returns `ok`.**
 - **Never auto-retry at the epic level.** Halt and surface.
 - **Bounded retries**: 3 per story across waves.
