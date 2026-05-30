@@ -207,7 +207,7 @@ For `story_qid=...` entry:
 
 ## Tracking work in the orchestrator's own Task List
 
-In your own (main session) Task List, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. The main session is in **permissive mode** for the hooks (not a defined agent_type), so the prefix is optional but doing it lets the loom-task-completed-sync hook auto-complete the story tracking item if a wave finishes cleanly.
+In your own (main session) Task List, use subjects formatted as `[<sqid>] <story title>` while a wave is in flight. When the story executor completes, call `loom complete <sqid>` to mark the story done in loom.
 
 ## Finalize branch
 
