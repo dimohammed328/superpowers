@@ -139,8 +139,8 @@ to step 6.
 
 For each task in order:
 
-- Set the task `in_progress`. The `loom-task-inprogress-sync` hook
-  automatically calls `loom update <task-qid> status in_progress`.
+- Run `loom update <task-qid> status in_progress` before starting any work
+  on this task. This is mandatory — do not skip it.
 - **Apply TDD discipline** (invoke `superpowers:test-driven-development`
   skill): failing test → run failing → minimal implementation → run passing
   → refactor.
