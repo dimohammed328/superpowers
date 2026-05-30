@@ -108,6 +108,14 @@ injected by the SubagentStart hook — not templates for you to fill in.
 
 > Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
 
+> **MANDATORY: You MUST drive loom task status directly.**
+> Before starting each task run `loom update <task-qid> status in_progress`.
+> After committing and verifying, run `loom complete <task-qid>`.
+> There are NO hooks that mirror these calls for you — if you skip them,
+> loom will not reflect your progress and the integrator will see stale state.
+> Do NOT rely on `TaskCreate`, `TaskUpdate`, or any harness tool for loom
+> status tracking.
+
 ### Step 3 — Read the story body
 
 ```bash
