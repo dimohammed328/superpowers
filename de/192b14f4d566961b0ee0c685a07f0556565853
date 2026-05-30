@@ -1,0 +1,19 @@
+README.md
+  s_dac89cf967bec7::t_21070f80a60813 170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "de192b14f4d566961b0ee0c685a07f0556565853",
+  "prompts": {},
+  "sessions": {
+    "s_dac89cf967bec7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ec9978a3-2330-4779-a113-80319eac1e02",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
