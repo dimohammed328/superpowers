@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR)."
+description: "Use after writing-plans has materialized loom items. Orchestrates execution end-to-end: epic-wave loop (parallel story-executor dispatch + per-story merge & validate) for epic scope, or single-executor-then-integrator for story scope; on validation success, finalizes the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it)."
 ---
 
 # Executing Plans — loom-backed orchestrator
@@ -172,7 +172,7 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
    ```
 2. If `result.result == "ok"`:
    - `loom complete <epic-qid>`
-   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
+   - Proceed to the **Finalize branch** section below to open a PR (or merge+push if explicitly requested).
 3. Else: HALT with the validator's diagnostic. Do not auto-retry at the epic level — that's a human decision.
 
 ## Story (single-item) shape
@@ -200,7 +200,7 @@ For `story_qid=...` entry:
    ```
 3. If `result.ok`:
    - `loom complete <sqid>`
-   - Proceed to the **Finalize branch** section below to merge/push (or open a PR).
+   - Proceed to the **Finalize branch** section below to open a PR (or merge+push if explicitly requested).
 4. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
