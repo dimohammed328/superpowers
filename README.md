@@ -167,7 +167,7 @@ already use it in another harness.
 
 2. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
 
-3. **executing-plans** - Activates with plan. Orchestrates execution: parallel story-executor dispatch for epics, or single-executor for stories, with merge and validation between waves. On final validation success, finalizes the branch (merge + push by default, or `gh pr create` when the user explicitly asked for a PR). Worktree creation for the epic and each story is handled inline by the orchestrator and story-executor.
+3. **executing-plans** - Activates with plan. Orchestrates execution: parallel story-executor dispatch for epics, or single-executor for stories, with merge and validation between waves. On final validation success, finalizes the branch (opens a PR by default; merges into main and pushes only when the user explicitly requested it). Worktree creation for the epic and each story is handled inline by the orchestrator and story-executor.
 
 4. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 
