@@ -1,0 +1,19 @@
+skills/brainstorming/SKILL.md
+  s_ccdacfbd612106::t_8a9c3288fa6d80 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fa71b1e7acf241ec338f133a13c275e6e476522e",
+  "prompts": {},
+  "sessions": {
+    "s_ccdacfbd612106": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8e06b93-f72c-4188-9812-ec4c677d6fbc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
