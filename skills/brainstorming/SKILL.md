@@ -38,6 +38,8 @@ You MUST use TaskCreate to add a Task List item for each of these and complete i
 
 ## Groomed draft structure
 
+**Every story in the draft MUST carry an ordered list of granular tasks.** Each task is scoped to a single line or single-function change and the list is sequenced as a step-by-step manual for completing the story. Granular ordered tasks make execution and validation tractable — without them a story executor cannot make reliable incremental progress or verify partial work.
+
 For **epic** mode, the draft includes:
 
 ```
@@ -48,7 +50,7 @@ For **epic** mode, the draft includes:
     - Validation Criteria (checklist): observable, no implementation detail
     - Implementation Notes: approach + key decisions from this session
     - Out of Scope
-- child stories: list of {title, body sections (same shape), parent epic, deps on other stories}
+- child stories: list of {title, body sections (same shape), parent epic, deps on other stories, child tasks: ordered list of {title, body (required), deps on other tasks} — each task scoped to a single line or single-function change; at least one task required per story}
 ```
 
 For **story** mode, the draft includes:
@@ -56,7 +58,7 @@ For **story** mode, the draft includes:
 ```
 - title: <short story title>
 - body sections (same as epic): Summary, Context, Validation Criteria, Implementation Notes, Out of Scope
-- child tasks: list of {title, optional body, deps on other tasks}
+- child tasks: ordered list of {title, body (required), deps on other tasks} — each task scoped to a single line or single-function change, sequenced as a step-by-step manual to completing the story; at least one task is required
 ```
 
 **Validation criteria rules:**

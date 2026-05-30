@@ -43,7 +43,7 @@ Every created epic and story body MUST contain these sections in order:
 <things explicitly NOT in this item; common source of validation disputes>
 ```
 
-Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines), describing what the single task does.
+Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines), describing what the single task does. Each task must be scoped to a single line or single-function change — no task should bundle multiple independent edits.
 
 ## Workflow
 
@@ -64,6 +64,7 @@ loom update "$EPIC" assignee "${CLAUDE_SESSION_ID}"
 for each story in the draft:
   STORY=$(loom story create "$EPIC" --title "<story title>" --body-file <tmp>/story-N.md)
   loom update "$STORY" assignee "${CLAUDE_SESSION_ID}"
+  # Every story MUST have at least one task — a story with no tasks cannot be executed.
   for each task in the story:
     loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N-M.md
 ```
@@ -74,6 +75,7 @@ For **story mode**:
 # Story lives under <project>:backlog
 STORY=$(loom story create "<project>:backlog" --title "<title>" --body-file <tmp>/story.md)
 loom update "$STORY" assignee "${CLAUDE_SESSION_ID}"
+# Every story MUST have at least one task — a story with no tasks cannot be executed.
 for each task in the draft:
   loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N.md
 ```
@@ -115,3 +117,13 @@ Once the user signs off on the materialized tree, invoke **`superpowers:executin
 ## No placeholders in loom item bodies
 
 The body template is mandatory. Don't leave "TBD" or "Add criteria later" in Validation Criteria sections — the brainstorming step produced concrete criteria. If the criteria are vague, return to brainstorming.
+
+## Every story must decompose into ordered granular tasks
+
+Every story MUST have at least one task. A story with no tasks cannot be executed — the story-executor agent relies on `loom order` to drive its work loop, and an empty task list causes it to stop and report a malformed plan.
+
+Tasks must be:
+- **Granular**: each task is scoped to a single line or single-function change. If a task bundles multiple independent edits, split it.
+- **Ordered**: the task list is sequenced as a step-by-step manual for completing the story — dependencies are declared so `loom order` produces a coherent execution sequence.
+
+Granular ordered tasks make execution and validation tractable. Without them a story executor cannot make reliable incremental progress, cannot produce atomic commits, and cannot verify partial work against criteria. If the groomed draft delivered by brainstorming has no tasks or only coarse tasks, return to brainstorming before materializing.
