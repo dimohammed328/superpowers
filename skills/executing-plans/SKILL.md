@@ -55,18 +55,33 @@ See `docs/orchestrator-log.md` for the full semantic event vocabulary and per-ki
 
 ### Setup (once per `/epic`)
 
-1. Call `EnterWorktree` with `name="loom/<epic-qid-dashed>"` to enter a
+1. **Ensure `main` is up to date before creating the epic worktree.** The
+   epic worktree branches off the orchestrator's current HEAD, so `main`
+   must be checked out and fast-forwarded to `origin/main` first. A
+   diverged or stale `main` would poison every story-executor worktree
+   branching from it.
+
+   ```bash
+   git checkout main && git fetch origin && git pull --ff-only origin main
+   ```
+
+   If `git pull --ff-only` fails (local `main` has diverged from
+   `origin/main`), **halt immediately** and surface the divergence to the
+   user. Do not proceed with worktree creation until the user resolves the
+   conflict.
+
+2. Call `EnterWorktree` with `name="loom/<epic-qid-dashed>"` to enter a
    worktree for the epic. The harness creates the worktree at
    `<repo>/.claude/worktrees/<name-with-slashes-replaced>/` on a branch
    named `worktree-<name>` (the renamed-slash form), off the parent
    session's HEAD (typically `main`).
-2. Confirm the working directory is the epic worktree (the harness sets
+3. Confirm the working directory is the epic worktree (the harness sets
    cwd as part of `EnterWorktree`) and record:
    - `<epic_worktree>` — the absolute path printed by `pwd`.
    - `<epic_branch>` — the branch name from `git rev-parse --abbrev-ref HEAD`.
 
    You will pass both to story-integrator dispatches.
-3. Initialize retry counters file: `mkdir -p .loom && echo "{}" > .loom/retry-counters.json`.
+4. Initialize retry counters file: `mkdir -p .loom && echo "{}" > .loom/retry-counters.json`.
 
 ### How subagents create their own worktrees
 
