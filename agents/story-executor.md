@@ -166,8 +166,8 @@ For each task in order:
   else, STOP — you ended up on the wrong branch and must report the failure
   to the orchestrator.
 
-- Mark the task `completed`. The `loom-task-completed-sync` hook
-  automatically calls `loom complete <task-qid>`.
+- Run `loom complete <task-qid>` after the commit is verified. This is
+  mandatory — do not skip it.
 
 ### Step 7 — Report back
 
