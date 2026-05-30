@@ -194,7 +194,22 @@ To dispatch subagents in parallel, send a single message with multiple `Agent` t
 
 For `story_qid=...` entry:
 
-1. Dispatch one story-executor:
+1. **Ensure `main` is up to date before dispatching the story-executor.**
+   The harness creates the executor's worktree off the orchestrator's
+   current HEAD (`worktree.baseRef=head`), so if the orchestrator is not
+   on an up-to-date `main`, the executor branches off a stale or diverged
+   base. Check out `main` and fast-forward it before proceeding:
+
+   ```bash
+   git checkout main && git fetch origin && git pull --ff-only origin main
+   ```
+
+   If `git pull --ff-only` fails (local `main` has diverged from
+   `origin/main`), **halt immediately** and surface the divergence to the
+   user. Do not dispatch the story-executor until the user resolves the
+   conflict.
+
+2. Dispatch one story-executor:
    ```
    Agent(subagent_type="story-executor",
          prompt="story_qid=<sqid> parent_branch=main")
@@ -204,7 +219,7 @@ For `story_qid=...` entry:
    The harness creates the executor's worktree automatically (`isolation:
    worktree` frontmatter). The executor returns `branch` and `worktree` in
    its result JSON. Capture both.
-2. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
+3. Wait. Then dispatch a story-integrator with `epic_qid=none` (the integrator will skip the merge step and run validation directly on the story branch):
    ```
    Agent(subagent_type="story-integrator",
          prompt="epic_qid=none story_qid=<sqid> "
@@ -213,10 +228,10 @@ For `story_qid=...` entry:
                 "epic_worktree=<repo-root> "
                 "story_worktree=<executor_worktree>")
    ```
-3. If `result.ok`:
+4. If `result.ok`:
    - `loom complete <sqid>`
    - Proceed to the **Finalize branch** section below to open a PR (or merge+push if explicitly requested).
-4. If `result` is merge_failed or validation_failed:
+5. If `result` is merge_failed or validation_failed:
    - `loom reopen <sqid>`, increment retry counter, redispatch up to 3 times.
    - On exhausting retries: HALT.
 
