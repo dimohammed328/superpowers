@@ -1,0 +1,19 @@
+skills/epic/SKILL.md
+  s_dac89cf967bec7::t_109582238d97fb 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d90deffa7a1e2d7b06bcd65438d38ca528ac7e4e",
+  "prompts": {},
+  "sessions": {
+    "s_dac89cf967bec7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ec9978a3-2330-4779-a113-80319eac1e02",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
