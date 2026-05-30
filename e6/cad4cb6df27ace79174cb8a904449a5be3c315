@@ -1,0 +1,21 @@
+skills/story/SKILL.md
+  s_dac89cf967bec7::t_86d9bdc985eb06 34
+  s_dac89cf967bec7::t_8849f2219fe0a0 3
+  s_dac89cf967bec7::t_3e776cb509534a 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e6cad4cb6df27ace79174cb8a904449a5be3c315",
+  "prompts": {},
+  "sessions": {
+    "s_dac89cf967bec7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ec9978a3-2330-4779-a113-80319eac1e02",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
