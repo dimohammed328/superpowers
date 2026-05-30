@@ -27,9 +27,6 @@ scripts/sync-to-codex-plugin.sh -n       # dry-run preview (always shown anyway)
 scripts/sync-to-codex-plugin.sh          # full run: clone fork, rsync, commit, push, gh pr create
 
 # Hook unit tests (fast, hermetic — each spins up a temp loom workspace)
-tests/hooks/test_task_completed_sync.sh
-tests/hooks/test_task_created_guard.sh
-tests/hooks/test_task_inprogress_sync.sh
 tests/hooks/test_subagent_context_inject.sh
 
 # Claude Code skill tests (slow; require `claude` CLI on PATH and dev marketplace enabled)
@@ -59,11 +56,11 @@ Subagent definitions used by the loom-backed planning workflow: `codebase-resear
 Wired up in `.claude-plugin/plugin.json` and (for the SessionStart bootstrap) `hooks/hooks.json`. Two roles:
 
 1. **`session-start`** — injects the full `using-superpowers` SKILL.md into every new session as `additionalContext`. The script branches on `CURSOR_PLUGIN_ROOT` / `CLAUDE_PLUGIN_ROOT` / `COPILOT_CLI` env vars because each harness expects a different JSON shape (`additional_context` vs `hookSpecificOutput.additionalContext` vs `additionalContext`). Don't emit more than one — Claude Code reads both without dedup.
-2. **`loom-*.sh`** — synchronize the harness's task/subagent lifecycle with the loom CLI. `loom-task-created-guard.sh` *blocks* TaskCreate calls whose subject doesn't match a `[<qid>] …` pattern when the agent is a `story-executor` (strict mode); `-completed-sync.sh` and `-inprogress-sync.sh` mirror status into loom; `loom-subagent-context-inject.sh` injects the workflow-context block at SubagentStart.
+2. **`loom-*.sh`** — Two remaining loom hooks: `loom-subagent-context-inject.sh` injects the workflow-context block at SubagentStart; `loom-log.sh` logs task/subagent lifecycle events. Story executors drive loom task status directly (via `loom update` / `loom complete`) — there are no hook scripts that mirror status.
 
 ### Loom-backed planning workflow
 
-The `/epic` and `/story` slash commands drive a project-managed planning loop backed by the external `loom` CLI (workspace lives in `.loom/`, gitignored). The contract — story executors live in worktrees, mirror task status to loom via TaskCreate/TaskUpdate hooks, never merge their own branches — is described in `agents/story-executor.md`, `agents/story-integrator.md`, and the design doc `docs/plans/2026-05-22-loom-backed-planning-design.md`. If you change hook behavior or subagent frontmatter, re-read those before assuming the new behavior composes.
+The `/epic` and `/story` slash commands drive a project-managed planning loop backed by the external `loom` CLI (workspace lives in `.loom/`, gitignored). The contract — story executors live in worktrees, drive loom task status directly, never merge their own branches — is described in `agents/story-executor.md`, `agents/story-integrator.md`, and the design doc `docs/plans/2026-05-22-loom-backed-planning-design.md`. If you change hook behavior or subagent frontmatter, re-read those before assuming the new behavior composes.
 
 ## Cross-harness invariants
 
