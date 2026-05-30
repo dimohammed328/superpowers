@@ -48,7 +48,7 @@ For **epic** mode, the draft includes:
     - Validation Criteria (checklist): observable, no implementation detail
     - Implementation Notes: approach + key decisions from this session
     - Out of Scope
-- child stories: list of {title, body sections (same shape), parent epic, deps on other stories}
+- child stories: list of {title, body sections (same shape), parent epic, deps on other stories, child tasks: ordered list of {title, body (required), deps on other tasks} — each task scoped to a single line or single-function change; at least one task required per story}
 ```
 
 For **story** mode, the draft includes:
