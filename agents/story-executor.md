@@ -128,29 +128,12 @@ truth.** The number of items returned is exactly the number of tasks you
 will execute. Do not add, drop, or merge tasks based on what the story body
 prose suggests — the body is context, `loom order` is the work.
 
-### Step 5 — Materialize the task list in your Task List
+### Step 5 — Confirm the task list
 
-For *every* task qid returned by `loom order` in step 4, emit a separate
-`TaskCreate(...)` call with subject `[<task-qid>] <task title>`. The
-`TaskCreated` hook validates each subject against loom and rejects malformed
-entries.
-
-The story qid is **not** a Task List subject — only its child task qids
-are. Do not create a single entry like `[superpowers:65wxnvr:1] Implement
-story` — it will be blocked, and even if it weren't, it defeats the
-per-task TDD/commit/sync loop that follows.
-
-Example — given `loom order` returning three tasks `foo:bar:1:1`,
-`foo:bar:1:2`, `foo:bar:1:3`:
-
-```
-TaskCreate(subject="[foo:bar:1:1] Add failing test for parser edge case")
-TaskCreate(subject="[foo:bar:1:2] Implement parser fix")
-TaskCreate(subject="[foo:bar:1:3] Update docs and changelog")
-```
-
-Emit these *before* starting work on any of them, so the full plan is
-visible up front.
+The output of `loom order` from step 4 is your authoritative task list.
+You track progress directly in loom — you do not materialize the list into
+the harness Task List. Review the task qids and titles returned and proceed
+to step 6.
 
 ### Step 6 — Walk the task list sequentially
 
