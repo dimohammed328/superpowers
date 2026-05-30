@@ -1,5 +1,7 @@
 # Loom-Superpowers Integration Implementation Plan
 
+> **Superseded (2026-05-29):** The loom task guard and status-sync hooks described in this document (`loom-task-created-guard.sh`, `loom-task-inprogress-sync.sh`, `loom-task-completed-sync.sh`) have been removed. The story-executor now calls `loom update <task-qid> status in_progress` and `loom complete <task-qid>` directly, without relying on harness hooks to mirror status.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Rewrite the superpowers planning/execution skill chain to use loom as the durable backend; add `/epic` and `/story` entry skills; add four agent definitions and four hook scripts that bridge Claude Code's task system to loom.

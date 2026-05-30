@@ -1,5 +1,7 @@
 # Loom-Backed Planning & Execution — Design
 
+> **Superseded (2026-05-29):** The loom task guard and status-sync hooks described in this document (`loom-task-created-guard.sh`, `loom-task-inprogress-sync.sh`, `loom-task-completed-sync.sh`) have been removed. The story-executor now calls `loom update <task-qid> status in_progress` and `loom complete <task-qid>` directly, without relying on harness hooks to mirror status.
+
 **Status:** approved spec, pending implementation plan
 **Date:** 2026-05-22
 **Scope:** rewrite the superpowers planning / execution skill chain to use the [`loom`](https://github.com/danishflorist/loom) project-management CLI as the durable backend; add `/epic` and `/story` slash-command entry skills; add 5 small CLI features to loom.

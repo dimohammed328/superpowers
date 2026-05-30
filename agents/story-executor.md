@@ -108,6 +108,14 @@ injected by the SubagentStart hook — not templates for you to fill in.
 
 > Before running any loom CLI command, invoke `superpowers:using-loom` to ensure the correct global flags and workspace are in scope.
 
+> **MANDATORY: You MUST drive loom task status directly.**
+> Before starting each task run `loom update <task-qid> status in_progress`.
+> After committing and verifying, run `loom complete <task-qid>`.
+> There are NO hooks that mirror these calls for you — if you skip them,
+> loom will not reflect your progress and the integrator will see stale state.
+> Do NOT rely on `TaskCreate`, `TaskUpdate`, or any harness tool for loom
+> status tracking.
+
 ### Step 3 — Read the story body
 
 ```bash
@@ -128,36 +136,19 @@ truth.** The number of items returned is exactly the number of tasks you
 will execute. Do not add, drop, or merge tasks based on what the story body
 prose suggests — the body is context, `loom order` is the work.
 
-### Step 5 — Materialize the task list in your Task List
+### Step 5 — Confirm the task list
 
-For *every* task qid returned by `loom order` in step 4, emit a separate
-`TaskCreate(...)` call with subject `[<task-qid>] <task title>`. The
-`TaskCreated` hook validates each subject against loom and rejects malformed
-entries.
-
-The story qid is **not** a Task List subject — only its child task qids
-are. Do not create a single entry like `[superpowers:65wxnvr:1] Implement
-story` — it will be blocked, and even if it weren't, it defeats the
-per-task TDD/commit/sync loop that follows.
-
-Example — given `loom order` returning three tasks `foo:bar:1:1`,
-`foo:bar:1:2`, `foo:bar:1:3`:
-
-```
-TaskCreate(subject="[foo:bar:1:1] Add failing test for parser edge case")
-TaskCreate(subject="[foo:bar:1:2] Implement parser fix")
-TaskCreate(subject="[foo:bar:1:3] Update docs and changelog")
-```
-
-Emit these *before* starting work on any of them, so the full plan is
-visible up front.
+The output of `loom order` from step 4 is your authoritative task list.
+You track progress directly in loom — you do not materialize the list into
+the harness Task List. Review the task qids and titles returned and proceed
+to step 6.
 
 ### Step 6 — Walk the task list sequentially
 
 For each task in order:
 
-- Set the task `in_progress`. The `loom-task-inprogress-sync` hook
-  automatically calls `loom update <task-qid> status in_progress`.
+- Run `loom update <task-qid> status in_progress` before starting any work
+  on this task. This is mandatory — do not skip it.
 - **Apply TDD discipline** (invoke `superpowers:test-driven-development`
   skill): failing test → run failing → minimal implementation → run passing
   → refactor.
@@ -183,8 +174,8 @@ For each task in order:
   else, STOP — you ended up on the wrong branch and must report the failure
   to the orchestrator.
 
-- Mark the task `completed`. The `loom-task-completed-sync` hook
-  automatically calls `loom complete <task-qid>`.
+- Run `loom complete <task-qid>` after the commit is verified. This is
+  mandatory — do not skip it.
 
 ### Step 7 — Report back
 
@@ -213,8 +204,8 @@ and `<WORKTREE>` to clean up.
 - Do NOT merge your branch.
 - Do NOT skip tasks or fold them together — one commit per `loom order` task.
 - Do NOT modify files outside your worktree.
-- Do NOT call `loom update <task-qid> status <anything>` directly — let the
-  hooks do it via your Task List.
+- You MUST call `loom update <task-qid> status in_progress` and
+  `loom complete <task-qid>` directly — no hooks mirror these for you.
 
 ## Failure modes
 

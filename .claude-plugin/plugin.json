@@ -50,14 +50,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-created-guard.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
@@ -68,29 +60,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-completed-sync.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-log.sh"
           }
         ]
       }
     ],
     "PostToolUse": [
-      {
-        "matcher": "TaskUpdate",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/loom-task-inprogress-sync.sh"
-          }
-        ]
-      },
       {
         "matcher": "TaskUpdate",
         "hooks": [
