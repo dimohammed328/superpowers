@@ -196,8 +196,8 @@ and `<WORKTREE>` to clean up.
 - Do NOT merge your branch.
 - Do NOT skip tasks or fold them together — one commit per `loom order` task.
 - Do NOT modify files outside your worktree.
-- Do NOT call `loom update <task-qid> status <anything>` directly — let the
-  hooks do it via your Task List.
+- You MUST call `loom update <task-qid> status in_progress` and
+  `loom complete <task-qid>` directly — no hooks mirror these for you.
 
 ## Failure modes
 
