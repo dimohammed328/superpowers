@@ -217,7 +217,31 @@ On final validation success, this skill itself terminates the flow by integratin
 - For epic flow: the epic branch `loom/<epic-qid>` is merged into `main`.
 - For story flow (`/story`): the story branch `loom/<sqid>` is merged into `main`.
 
-**Default behavior (merge + push):**
+**Default behavior (open a PR):**
+
+Push the branch and open a PR. Emit `epic_finalize` with a `pr_url` once the PR is created:
+
+```bash
+git push -u origin <branch>
+pr_url=$(gh pr create --base <parent> --head <branch> \
+  --title "<epic or story title>" \
+  --body "<summary derived from the loom item body>")
+
+"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
+  --kind epic_finalize \
+  --epic-qid <epic_qid> \
+  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
+  --session-id "$CLAUDE_SESSION_ID" \
+  --agent-type "story-executor" \
+  --field "merged_to=<parent>" \
+  --field "pr_url=${pr_url}"
+```
+
+Leave the branch and worktree in place; the user will land the PR.
+
+**Merge + push (only when explicitly requested):**
+
+If the original `/epic` or `/story` request contains explicit merge-to-main wording (e.g. "merge to main", "push to main", "no PR"), merge locally and push instead of opening a PR.
 
 Before merging, emit an `epic_finalize` event so the log captures the finalize decision:
 ```bash
@@ -248,28 +272,6 @@ After a successful push, clean up the local branch and worktree:
 git branch -d <branch>
 git worktree remove <worktree-path>   # if a worktree existed for this branch
 ```
-
-**PR mode (only when the user explicitly asked):**
-
-If the original `/epic` or `/story` request named "PR" or "pull request" (e.g. "open a PR for X", "send a pull request that does Y"), do not merge locally. Instead, emit `epic_finalize` with a `pr_url` once the PR is created, then push the branch and open a PR:
-
-```bash
-git push -u origin <branch>
-pr_url=$(gh pr create --base <parent> --head <branch> \
-  --title "<epic or story title>" \
-  --body "<summary derived from the loom item body>")
-
-"${CLAUDE_PLUGIN_ROOT}/scripts/loom-log-event.sh" \
-  --kind epic_finalize \
-  --epic-qid <epic_qid> \
-  --agent-id "${CLAUDE_SESSION_ID}-orchestrator" \
-  --session-id "$CLAUDE_SESSION_ID" \
-  --agent-type "story-executor" \
-  --field "merged_to=<parent>" \
-  --field "pr_url=${pr_url}"
-```
-
-Leave the branch and worktree in place; the user will land the PR.
 
 **How to tell which mode applies.** PR creation is the default. Use merge + push only when the original `/epic` or `/story` request contains explicit merge-to-main wording (e.g. "merge to main", "push to main", "no PR"). If genuinely ambiguous, ask once before acting.
 
