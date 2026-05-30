@@ -56,7 +56,7 @@ For **story** mode, the draft includes:
 ```
 - title: <short story title>
 - body sections (same as epic): Summary, Context, Validation Criteria, Implementation Notes, Out of Scope
-- child tasks: list of {title, optional body, deps on other tasks}
+- child tasks: ordered list of {title, body (required), deps on other tasks} — each task scoped to a single line or single-function change, sequenced as a step-by-step manual to completing the story; at least one task is required
 ```
 
 **Validation criteria rules:**
