@@ -64,6 +64,7 @@ loom update "$EPIC" assignee "${CLAUDE_SESSION_ID}"
 for each story in the draft:
   STORY=$(loom story create "$EPIC" --title "<story title>" --body-file <tmp>/story-N.md)
   loom update "$STORY" assignee "${CLAUDE_SESSION_ID}"
+  # Every story MUST have at least one task — a story with no tasks cannot be executed.
   for each task in the story:
     loom task create "$STORY" --title "<task title>" --body-file <tmp>/task-N-M.md
 ```
