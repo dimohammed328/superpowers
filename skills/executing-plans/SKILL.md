@@ -214,8 +214,10 @@ In your own (main session) Task List, use subjects formatted as `[<sqid>] <story
 On final validation success, this skill itself terminates the flow by integrating the validated branch into its parent. There is no further handoff.
 
 **What "the branch" means here:**
-- For epic flow: the epic branch `loom/<epic-qid>` is merged into `main`.
-- For story flow (`/story`): the story branch `loom/<sqid>` is merged into `main`.
+- For epic flow: the epic branch `loom/<epic-qid>` is integrated into `main` (via PR or merge).
+- For story flow (`/story`): the story branch `loom/<sqid>` is integrated into `main` (via PR or merge).
+
+In the default PR path, the branch and worktree are left in place for the user to land. In the merge + push path, cleanup (branch delete + worktree remove) happens after a successful push.
 
 **Default behavior (open a PR):**
 
