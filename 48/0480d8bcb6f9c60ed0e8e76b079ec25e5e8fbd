@@ -1,0 +1,19 @@
+skills/writing-plans/SKILL.md
+  s_ccdacfbd612106::t_8707067224fd23 78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "480480d8bcb6f9c60ed0e8e76b079ec25e5e8fbd",
+  "prompts": {},
+  "sessions": {
+    "s_ccdacfbd612106": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8e06b93-f72c-4188-9812-ec4c677d6fbc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
