@@ -1,0 +1,19 @@
+agents/story-executor.md
+  s_96a4bba5fdb3b0::t_7c26f29ddc9e52 142-143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "20390639db6ff8e4b88d1005dc749c84efb6fc30",
+  "prompts": {},
+  "sessions": {
+    "s_96a4bba5fdb3b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a7667053-30fd-47e0-a018-ae205b857219",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Danish Mohammed <dimohammed328@gmail.com>"
+    }
+  }
+}
