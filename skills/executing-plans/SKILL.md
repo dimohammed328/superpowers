@@ -271,7 +271,7 @@ pr_url=$(gh pr create --base <parent> --head <branch> \
 
 Leave the branch and worktree in place; the user will land the PR.
 
-**How to tell which mode applies.** Look at the original user request that triggered `/epic` or `/story`. If it contains the literal words "PR" or "pull request", use PR mode. Otherwise use the default merge + push. If genuinely ambiguous, ask once before acting.
+**How to tell which mode applies.** PR creation is the default. Use merge + push only when the original `/epic` or `/story` request contains explicit merge-to-main wording (e.g. "merge to main", "push to main", "no PR"). If genuinely ambiguous, ask once before acting.
 
 **Validation failure path is unchanged:** if the final validator returned a failure, halt and surface the diagnostic — do not attempt to finalize.
 
