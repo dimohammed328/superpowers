@@ -43,7 +43,7 @@ Every created epic and story body MUST contain these sections in order:
 <things explicitly NOT in this item; common source of validation disputes>
 ```
 
-Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines), describing what the single task does.
+Tasks do NOT carry validation criteria; their bodies are short (under ~10 lines), describing what the single task does. Each task must be scoped to a single line or single-function change — no task should bundle multiple independent edits.
 
 ## Workflow
 
