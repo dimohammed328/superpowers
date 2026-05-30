@@ -38,6 +38,8 @@ You MUST use TaskCreate to add a Task List item for each of these and complete i
 
 ## Groomed draft structure
 
+**Every story in the draft MUST carry an ordered list of granular tasks.** Each task is scoped to a single line or single-function change and the list is sequenced as a step-by-step manual for completing the story. Granular ordered tasks make execution and validation tractable — without them a story executor cannot make reliable incremental progress or verify partial work.
+
 For **epic** mode, the draft includes:
 
 ```
